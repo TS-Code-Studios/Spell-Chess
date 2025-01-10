@@ -1,39 +1,46 @@
-# Spell Chess
-A chess variation with different spells to use during games, similar to the existing Spell Chess or AniChess.
+# About spell chess
+A chess variation with different spells to use during games, similar to the existing spell chess variation by chess.com and Supercell, or AniChess.
 
-# Collaborators
-- **Simon Korten/simonkdev:** UI and Graphic design
-- **Theodor Römpp/FRBF Studios:** Background coding
+# Developers
+- **Simon Korten/simonkdev:** UI and Graphic design.
+- **Theodor Römpp/FRBF Studios:** Background coding and class modelling/management.
 - **Aaron Filsinger/hitback16:** Content management, database management and testing.
 
 # Information
-Code is mostly written in Java.
-SpellChess.java works like a .exe file. When it's main method is executed, it will launch the game's main menu.
-TODO.txt contains a To Do list for every collaborator.
-CATALOG.txt contains info for coding, such as object names or the order of arrays.
+Please follow these guidelines while programming.
 
-/src/ contains all of the other .java files.
-/media/ will contain media - such as textures - for the code to use.
+- Code is mostly written in Java.
+- Please add frequent comments to help other developers understand your code.
+- When you want to make a major change, such as adding a new feature, please make a new branch and open a pull request to merge it into #main after you are done. It will be reviewed and merged.
+- When you find a bug, please open a new issue.
+- Run the SpellChess.java file to open the game.
+- *TODO.md* contains a To Do list for every developer.
+- *INFORMATION.md* contains more information for developers, such as a list of classes and important objects, as well as guidelines for coding. **PLEASE READ IT!**
+- */src/* contains all of the other .java files.
+- */resources/* will contain media - such as textures - for the code to use.
 
 # Roadmap
-**Step 1: Planning (Everyone)**
+Cursive things are already done.
+
+**Step 1: Planning (everyone)**
+- *Fill out .md files*
 - Model classes
 - Find ways of doing the basics
 - Create basic files and structures
-- Assign tasks
+- Assign tasks to developers
 
-**Step 2: Develop Chess**
+**Step 2: Develop vanilla chess**
 - Create a board (Simon)
 - Create pieces (Theodor)
 - Implement rules and turns (Theodor)
 - Implement notation (Aaron)
-- *Optional: Develop an engine*
+- Optional: Develop an engine
 
 **Step 3: Add a Main Menu (Simon)**
 
-**Step 4: Develop Spell Chess**
+**Step 4: Develop spell chess**
 - Come up with rules and spells (Aaron, Simon)
 - Implement spell- and energy system (Theodor)
-- Implement rules and spells (Everyone)
+- Implement rules and spells (everyone)
 
 **Step 5: Compile into .exe or an app**
