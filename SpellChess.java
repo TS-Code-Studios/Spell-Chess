@@ -1,7 +1,7 @@
-//Launches everything
 class SpellChess {
-  MainMenu mainMenu = new MainMenu();
+  MainMenuGUI mainMenu = new MainMenuGUI();
   public static void main (String[] args) {
-    mainMenu.createAndShowGUI():
+    //Creates a new main menu window
+    mainMenu.launchMainMenu();
   }
 }
