@@ -2,9 +2,9 @@
 A chess variation with different spells to use during games, similar to the existing Spell Chess or AniChess.
 
 # Collaborators
-**Simon Korten/simonkdev:** UI and Graphic design 
-**Theodor Römpp/FRBF Studios:** Background coding 
-**Aaron Filsinger/hitback16:** Content management, database management and testing.
+- **Simon Korten/simonkdev:** UI and Graphic design
+- **Theodor Römpp/FRBF Studios:** Background coding
+- **Aaron Filsinger/hitback16:** Content management, database management and testing.
 
 # Information
 Code is mostly written in Java.
@@ -27,7 +27,7 @@ CATALOG.txt contains info for coding, such as object names or the order of array
 - Create pieces (Theodor)
 - Implement rules and turns (Theodor)
 - Implement notation (Aaron)
-*- Optional: Develop an engine*
+- *Optional: Develop an engine*
 
 **Step 3: Add a Main Menu (Simon)**
 
