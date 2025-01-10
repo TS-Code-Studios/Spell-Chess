@@ -1,0 +1,44 @@
+# Types of classes
+This is a way of quickly describing the purpose of a class.
+
+- *Superior class*: A class which no object is ever created of. Instead, it creates objects of other classes to let them interact.
+- *Database class* (*DC*): A class serving as an external storage for raw, dynamic information in the form of its attributes. It has no methods.
+- *Array database class* (*ADC*): A special form of Database class for storing bundles of static information. It contains a single *ArrayList* method, returning an array with the set of values in a defined order that is given in one of the chapters below.
+- *Database handler class* (*DHC*): A class creating objects of DCs. It is used by GUIs, which can use its methods to either ask for a specific type of information to be directly displayed by the GUI, such as a string containing a lot of chained variables, or for changing a dynamic set of informations, following user input, using parameters.
+- *Graphical user interface class* (*GUI*): A class that creates a GUI window. It is also semi-superior, with the only thing ever creating an object of a GUI class being other superior classes.
+# Class list
+This is a list of every custom class of the project, along with its type and information about its purpose.
+
+**SpellChess.java**
+
+The ultimate superior class. Its only purpose is its *main()* function initiating and managing a new instance of the game.
+
+**MainMenuGUI.java**
+
+GUI class for the main menu. It's the secondmost superior class, with only *SpellChess* ever creating an object of it.
+# Important names
+**SpellChess**
+
+- *main()*: The method initiating everything.
+- *mainMenu*: An object of the class *MainMenuGUI*.
+
+**MainMenuGUI**
+
+- *launchMainMenu()*: A method creating a new main menu window. 
+- *mainMenuFrame*: *JFrame* object acting as the main menu's window.
+
+# ADC orders
+This is how the informations are arranged in the information arrays of ADCs.
+
+*No ADCs yet*
+# Naming schemes
+These are the guidelines for naming **ANYTHING**, ranging from variables to classes.
+Please always follow these for consistency and a smooth workflow.
+
+- Names must be descriptive (e.g. "points" for a point stat). Boolean variables must have "is" as a prefix.
+- For objects, the name must have the object's class as a suffix (e.g. "pointsPanel"). This excludes objects of our custom classes.
+- For classes, the first letter of the name must be capitalized and have the acronym of its respective class type at the end. This excludes superior classes.
+- Variables must have the their type (abbreviate if possible) as a suffix (e.g. "pointCounterInt", "statArray" or "isGameOverBool").
+- Methods must have different prefixes describing their purpose (e.g. "get" for a getter, "set" for a setter or "launch" for initiating a new part of the program, such as opening a GUI window.
+- If a method should be autmatically executed upon running a file, it must be called *public static void main (String[] args)*.
+- Names can (obviously) not be ambiguous within the same class.
