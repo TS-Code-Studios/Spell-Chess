@@ -20,7 +20,6 @@ GUI class for the main menu. It's the secondmost superior class, with only *Spel
 **SpellChess**
 
 - *main()*: The method initiating everything.
-- *mainMenu*: An object of the class *MainMenuGUI*.
 
 **MainMenuGUI**
 

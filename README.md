@@ -9,6 +9,7 @@ A chess variation with different spells to use during games, similar to the exis
 # Information
 Please follow these guidelines while programming.
 
+- ALWAYS RUN THE COMMAND cd Path\To\Repository before compiling anything!!!
 - Code is mostly written in Java.
 - Please add frequent comments to help other developers understand your code.
 - When you want to make a major change, such as adding a new feature, please make a new branch and open a pull request to merge it into #main after you are done. It will be reviewed and merged.
@@ -16,7 +17,7 @@ Please follow these guidelines while programming.
 - Run the SpellChess.java file to open the game.
 - *TODO.md* contains a To Do list for every developer.
 - *INFORMATION.md* contains more information for developers, such as a list of classes and important objects, as well as guidelines for coding. **PLEASE READ IT!**
-- */src/* contains all of the other .java files.
+- */gui/* contains all GUI-related *.java* files.
 - */resources/* will contain media - such as textures - for the code to use.
 
 # Roadmap
