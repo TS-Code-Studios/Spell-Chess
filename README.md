@@ -48,3 +48,4 @@ Cursive things are already done.
 # Branches
 - **Main**: The main branch containing fully developed code.
 - **MainMenuGUI-development**: Branch for Simon to work on the main menu.
+- **Vanilla-chess-development**: Branch for Theodor and Aaron to work on vanilla chess.
