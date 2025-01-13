@@ -7,6 +7,10 @@ import javax.swing.*;
 public class MainMenuGUI {
     /* Method for creating the main menu JFrame, making it visible,
     creating the elements and adding the elements to the window. */
+    int screenWidth;
+    int screenHeight;
+
+
     public static void launchMainMenu() {
         //graphics and device could later be used to implement a fullscreen button
         GraphicsEnvironment graphics = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -19,9 +23,10 @@ public class MainMenuGUI {
         //All elements of the main menu are defined
         JFrame mainMenuFrame = new JFrame();
         JLabel titleLabel = new JLabel("Spell Chess");
+        JButton launchGame = JButton("New Game")
         
         mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainMenuFrame.setSize(screenSize.width, screenSize.height);
+        mainMenuFrame.setSize(screenWidth, screenHeight);
         mainMenuFrame.setLocationRelativeTo(null);
         //The window is maximized as soon as it's opened
         mainMenuFrame.addWindowListener(new WindowAdapter() {
