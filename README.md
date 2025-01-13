@@ -9,7 +9,6 @@ A chess variation with different spells to use during games, similar to the exis
 # Information
 Please follow these guidelines while programming.
 
-- ALWAYS RUN THE COMMAND cd Path\To\Repository before compiling anything!!!
 - Code is mostly written in Java.
 - Please add frequent comments to help other developers understand your code.
 - When you want to make a major change, such as adding a new feature, please make a new branch and open a pull request to merge it into #main after you are done. It will be reviewed and merged.
@@ -25,7 +24,7 @@ Cursive things are already done.
 
 **Step 1: Planning (everyone)**
 - *Fill out .md files*
-- Model classes
+- *Model basic classes*
 - Find ways of doing the basics
 - Create basic files and structures
 - Assign tasks to developers
@@ -45,3 +44,7 @@ Cursive things are already done.
 - Implement rules and spells (everyone)
 
 **Step 5: Compile into .exe or an app**
+
+# Branches
+- **Main**: The main branch containing fully developed code.
+- **MainMenuGUI-development**: Branch for Simon to work on the main menu.
