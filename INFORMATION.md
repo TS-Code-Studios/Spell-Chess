@@ -16,7 +16,13 @@ The ultimate superior class. Its only purpose is its *main()* function initiatin
 **MainMenuGUI.java**
 
 GUI class for the main menu. It's the secondmost superior class, with only *SpellChess* ever creating an object of it.
+
+**ChessHandlerDHC.java**
+
+DHC class that starts a game of standard chess. It's either launched from a "Play" button directly on the main menu, or (once implemented) from a "Play" button on a submenu where you can choose the settings for the game first (such as time controls).
 # Important names
+Names of the most important methods, variables, and objects.
+
 **SpellChess**
 
 - *main()*: The method initiating everything.
