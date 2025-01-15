@@ -20,6 +20,10 @@ GUI class for the main menu. It's the secondmost superior class, with only *Spel
 **ChessHandlerDHC.java**
 
 DHC class that starts a game of standard chess. It's either launched from a "Play" button directly on the main menu, or (once implemented) from a "Play" button on a submenu where you can choose the settings for the game first (such as time controls).
+
+**ChessboardGUI.java**
+
+GUI class that creates a chessboard. It will be used for both vanilla and spell chess, with the elements that are imported being dependant on the variant that the players are playing.
 # Important names
 Names of the most important methods, variables, and objects.
 
