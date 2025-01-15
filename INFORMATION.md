@@ -39,7 +39,15 @@ Names of the most important methods, variables, and objects.
 # ADC orders
 This is how the informations are arranged in the information arrays of ADCs.
 
-*No ADCs yet*
+**positionMeta:**
+
+0. White O-O
+1. White O-O-O
+2. Black O-O
+3. Black O-O-O
+4. En passant target square
+5. Halfmoves
+6. Check
 # Naming schemes
 These are the guidelines for naming **ANYTHING**, ranging from variables to classes.
 Please always follow these for consistency and a smooth workflow.
