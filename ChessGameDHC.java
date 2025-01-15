@@ -18,6 +18,7 @@ public ChessGameDHC {
       {"p", "p", "p", "p", "p", "p", "p", "p"},
       {"r", "n", "b", "q", "k", "b", "n", "r"}
     };
-    positionMeta = new String[] {};
+    //Order: white O-O, white O-O-O, black O-O, black O-O-O, en passant square, halfmoves, check
+    positionMeta = new String[] {"-", "-", "-", "-", "-", "-", "-"};
   }
 }
