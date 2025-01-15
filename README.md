@@ -9,15 +9,15 @@ A chess variation with different spells to use during games, similar to the exis
 # Information
 Please follow these guidelines while programming.
 
-- Code is mostly written in Java.
+- Code is mostly written in Java. This is also a Maven project, so please install Maven. Ask copilot for help if necessary before messing around!
 - Please add frequent comments to help other developers understand your code.
 - When you want to make a major change, such as adding a new feature, please make a new branch and open a pull request to merge it into #main after you are done. It will be reviewed and merged.
-- When you find a bug, please open a new issue.
-- Run the SpellChess.java file to open the game.
+- When you find a major bug, please open a new issue.
+- Run mvn compile and then either run the *SpellChess.java* file or run *mvn clean package* followed by *jar -jar target/*jar file name*.jar* to test the program.
 - *TODO.md* contains a To Do list for every developer.
 - *INFORMATION.md* contains more information for developers, such as a list of classes and important objects, as well as guidelines for coding. **PLEASE READ IT!**
-- */gui/* contains all GUI-related *.java* files.
-- */resources/* will contain media - such as textures - for the code to use.
+- *src/main/java/com/javadevs/gui/* contains all GUI-related *.java* files. Make *package com.javadevs.gui* the first line of code for every class in it!
+- *src/main/resources/* contains all media - such as textures - for the code to use.
 
 # Roadmap
 Cursive things are already done.
@@ -25,8 +25,9 @@ Cursive things are already done.
 **Step 1: Planning (everyone)**
 - *Fill out .md files*
 - *Model basic classes*
-- Find ways of doing the basics
-- Create basic files and structures
+- *Convert to Maven project*
+- *Find ways of doing the basics*
+- *Create basic files and structures*
 - Assign tasks to developers
 
 **Step 2: Develop vanilla chess**
