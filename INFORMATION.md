@@ -19,7 +19,7 @@ GUI class for the main menu. It's the secondmost superior class, with only *Spel
 
 **ChessHandlerDHC.java**
 
-DHC class that starts a game of standard chess. It's either launched from a "Play" button directly on the main menu, or (once implemented) from a "Play" button on a submenu where you can choose the settings for the game first (such as time controls).
+DHC class that handles a standard game of chess. It's either launched from a "Play" button directly on the main menu, or (once implemented) from a "Play" button on a submenu where you can choose the settings for the game first (such as time controls).
 
 **ChessboardGUI.java**
 
@@ -29,12 +29,18 @@ Names of the most important methods, variables, and objects.
 
 **SpellChess**
 
-- *main()*: The method initiating everything.
+- *static void main(String[] args)*: The method initiating everything.
 
 **MainMenuGUI**
 
-- *launchMainMenu()*: A method creating a new main menu window. 
-- *mainMenuFrame*: *JFrame* object acting as the main menu's window.
+- *static void launchMainMenu()*: A method creating a new main menu window. 
+- *JFrame mainMenuFrame*: *JFrame* object acting as the main menu's window.
+
+**ChessHandlerDHC.java**
+
+- *boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove)*: Method that checks whether or not a move is possible and returns it as a boolean. *piece* needs to be lowercase if white and uppercase if black. *playerToMove* needs to be "w" or "B".
+- *String[][] position*: 2D array storing the current chess position.
+- *String[] positionMeta*: Array storing additional position info. More information can be found in the ADC Orders chapter below.
 
 # ADC orders
 This is how the informations are arranged in the information arrays of ADCs.
