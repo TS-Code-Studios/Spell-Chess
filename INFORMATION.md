@@ -40,20 +40,19 @@ Names of the most important methods, variables, and objects.
 
 - *boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove)*: Method that checks whether or not a move is possible and returns it as a boolean. *piece* needs to be lowercase if white and uppercase if black. *playerToMove* needs to be "w" or "B".
 - *String[][] position*: 2D array storing the current chess position.
-- *String[] positionMeta*: Array storing additional position info. More information can be found in the ADC Orders chapter below.
+- *int[] positionMeta*: Array storing additional position info. More information can be found in the ADC Orders chapter below.
 
 # ADC orders
 This is how the informations are arranged in the information arrays of ADCs.
 
-**positionMeta:**
+**int[] positionMeta:**
 
-0. White O-O
-1. White O-O-O
+0. White o-o
+1. White o-o-o
 2. Black O-O
 3. Black O-O-O
-4. En passant target square
-5. Halfmoves
-6. Check
+4. Halfmoves counter for 50-move-rule
+5. Check
 # Naming schemes
 These are the guidelines for naming **ANYTHING**, ranging from variables to classes.
 Please always follow these for consistency and a smooth workflow.

@@ -7,7 +7,7 @@ public class ChessGameDHC {
   //This 2D array contains the chess position to be displayed on the board
   String[][] position;
   //This 1D array contains info such as En Passant target squares, the last move, castling availability, etc.
-  String[] positionMeta;
+  int[] positionMeta;
 
   //These integers contain the difference in files and ranks for a move
   int fileDiff;
@@ -38,15 +38,16 @@ public class ChessGameDHC {
     };
     
     //positionMeta array is filled with the default chess position's meta
-    //Order: white O-O, white O-O-O, black O-O, black O-O-O, en passant square, halfmoves, check
-    positionMeta = new String[] {"-", "-", "-", "-", "-", "-", "-"};
+    //For true-or-false values, use "1" for true (such as if white can castle or not) and "0" for false.
+    //Order: white O-O, white O-O-O, black O-O, black O-O-O, halfmoves, check
+    positionMeta = new int[] {0, 0, 0, 0, 0, 0};
   }
 
   public String[][] getPosition() {
     return position;
   }
 
-  public String[] getPositionMeta() {
+  public int[] getPositionMeta() {
     return positionMeta;
   }
 
@@ -62,16 +63,18 @@ public class ChessGameDHC {
   }
   
   //This method can check if a move is possible. So far, castling, absolute pins, promotions and en passant are not included. For playerToMove, use "w" and "B" respectively.
+  //If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters to avoid crashes.
   public boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove) {
     boolean isMovePossible = false;
     
-    //The startSquare string is seperated
-    int startSquareFile = startSquare.charAt(0) - 'a' + 1;
-    int startSquareRank = startSquare.charAt(1);
+    //The startSquare string is seperated and turned into two integers
+    //The integers need to be reduced by 1 since array coordinates start at 0
+    int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
+    int startSquareRank = (startSquare.charAt(1) - 1);
 
     //The targetSquare string is seperated
-    int targetSquareFile = targetSquare.charAt(0) - 'a' + 1;
-    int targetSquareRank = targetSquare.charAt(1);
+    int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
+    int targetSquareRank = (targetSquare.charAt(1) - 1);
     
     //fileDiff and rankDiff is calculated (Math.abs = "absolute value" (Betrag))
     fileDiff = Math.abs(startSquareFile - targetSquareFile);
@@ -79,6 +82,7 @@ public class ChessGameDHC {
 
     //Checks if it's the right player to move, since capitalization = color
     if (isPieceSameColor(piece, playerToMove)) {
+
       //Checks if the target square exists to avoid crashes
       if (targetSquareRank > 0
           && targetSquareRank < 9
@@ -86,9 +90,20 @@ public class ChessGameDHC {
           && targetSquareFile < 9) {
         //This avoids crashes
         if (null != piece.toLowerCase()) {
+          //Does such a piece even exist on the start square?
+          if (!"o-o".equals(piece.toLowerCase())
+              && !"o-o-o".equals(piece.toLowerCase())
+              && !piece.equals(position[startSquareFile][startSquareRank])) {
+            return false;
+          }
+          
+          //Which piece is it?
           switch (piece.toLowerCase()) {
             //Is the piece a pawn?
-            case "p" -> isMovePossible = checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank);
+            case "p" -> {
+              if(checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+                return true;}
+              }
             
             //Is the piece a knight?
             case "n" -> {
@@ -145,8 +160,25 @@ public class ChessGameDHC {
               }
             }
 
+            //Is the piece a king?
+            case "k" -> {
+              //If there is at least one difference that equals 1, it's a 1 square queen movement
+              if (fileDiff == 1 || rankDiff == 1) {
+                if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
+                  isMovePossible = true;
+                }
+              }
+            }
+
+            //Is the move castling?
+            case "o-o-o", "o-o" -> {
+              if (canCastleHere(piece)) {
+                isMovePossible = true;
+              }
+            }
+
             //If the piece isn't  recognized, the move is obviously not legal
-            default -> isMovePossible = false;
+            default -> {isMovePossible = false;}
           }
         }
       }
@@ -219,9 +251,9 @@ public class ChessGameDHC {
     return true;
   }
 
-  //Method for checking if a file or rank (straight) is clear for a rook or queen
-  //This needs to be done using two seperate loops, one for vertical movement and one for horizontal movement
-  //Other than that, it's the exact same principle as for diagonals
+  /* Method for checking if a file or rank (straight) is clear for a rook or queen
+  This needs to be done using two seperate loops, one for vertical movement and one for horizontal movement
+  Other than that, it's the exact same principle as for diagonals */
   private boolean isStraightClear(int startSquareFile, int startSquareRank, int targetSquareFile, int targetSquareRank) {
     //If the file remains constant, the movement is vertical
     if (startSquareFile == targetSquareFile) {
@@ -251,6 +283,16 @@ public class ChessGameDHC {
       }
     }
     return true;
+  }
+
+  //Method for checking every way of castling
+  private boolean canCastleHere(String castleNotation) {
+    if ("o-o".equals(castleNotation) && positionMeta[0] == 1) {return true;}
+    else if ("o-o-o".equals(castleNotation) && positionMeta[1] == 1) {return true;}
+    else if ("O-O".equals(castleNotation) && positionMeta[2] == 1) {return true;}
+    else if ("O-O-O".equals(castleNotation) && positionMeta[3] == 1) {return true;}
+    
+    return false;
   }
 
   //Small method for checking whether or not a square is empty or occupied by an opposing piece
