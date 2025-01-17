@@ -66,7 +66,7 @@ public class ChessGameDHC {
   //If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters to avoid crashes.
   public boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove) {
     boolean isMovePossible = false;
-    
+
     //The startSquare string is seperated and turned into two integers
     //The integers need to be reduced by 1 since array coordinates start at 0
     int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
@@ -171,7 +171,12 @@ public class ChessGameDHC {
             }
 
             //Is the move castling?
-            case "o-o-o", "o-o" -> {
+            case "o-o-o" -> {
+              if (canCastleHere(piece)) {
+                isMovePossible = true;
+              }
+            }
+            case "o-o" -> {
               if (canCastleHere(piece)) {
                 isMovePossible = true;
               }
