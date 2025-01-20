@@ -3,6 +3,8 @@ package com.javadevs;
 //Version: 20/1/2024
 //See INFORMATION.md for more info
 
+import java.util.Scanner;
+
 public class ChessGameDHC {
   //This 2D array contains the chess position to be displayed on the board
   String[][] position;
@@ -21,28 +23,30 @@ public class ChessGameDHC {
   //Main method starts a text-controlled test game
   public static void main(String[] args) {
       ChessGameDHC testGame = new ChessGameDHC();
-      bool moveWasMade = false;
+      boolean moveWasMade = false;
       String playerToMove = "w";
       String moveMade;
       Scanner input = new Scanner(System.in);
 
       //Testgame loop
       while(true) {
-        System.out.prinln("Current position:");
-        System.out.println(testGame.positionToString);
+        System.out.println("Current position:");
+        System.out.println(testGame.positionToString());
         System.out.println("Enter your move in the format \"piece startSquare targetSquare\". " + playerToMove + " to move.");
        
         while(!moveWasMade) {
-          moveMade = input.nextString();
+          moveMade = input.nextLine();
           String[] moveComponents = moveMade.split(" ");
           if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
-            testGame.makeMove(piece, startSquare, targetSquare);
+            testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
             moveWasMade = true;
-          } else {
+            break;
+          } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
             System.out.println("Illegal move! Try again.");
+            System.out.println("piece " + moveComponents[0] + " startsquare " + moveComponents[1] + " targetsquare " + moveComponents[2]);
           }
         }
-        if (playerToMove == "w") {
+        if ("w".equals(playerToMove)) {
           playerToMove = "B";
         } else {
           playerToMove = "w";
@@ -52,16 +56,16 @@ public class ChessGameDHC {
 
   //Every array is assigned the values of the default chess position
   private void newDefaultPosition() {
-    //position array is filled with the default chess position (Uppercase = black pieces, lowercase = white pieces)
+    //position array is filled with the default chess position (Uppercase = black pieces, lowercase = white pieces, board is inverted to make the first rank row 0)
     position = new String[][] {
-      {"R", "N", "B", "Q", "K", "B", "N", "R"},
-      {"P", "P", "P", "P", "P", "P", "P", "P"},
-      {"-", "-", "-", "-", "-", "-", "-", "-"},
-      {"-", "-", "-", "-", "-", "-", "-", "-"},
-      {"-", "-", "-", "-", "-", "-", "-", "-"},
-      {"-", "-", "-", "-", "-", "-", "-", "-"},
+      {"r", "n", "b", "q", "k", "b", "n", "r"},
       {"p", "p", "p", "p", "p", "p", "p", "p"},
-      {"r", "n", "b", "q", "k", "b", "n", "r"}
+      {"-", "-", "-", "-", "-", "-", "-", "-"},
+      {"-", "-", "-", "-", "-", "-", "-", "-"},
+      {"-", "-", "-", "-", "-", "-", "-", "-"},
+      {"-", "-", "-", "-", "-", "-", "-", "-"},
+      {"P", "P", "P", "P", "P", "P", "P", "P"},
+      {"R", "N", "B", "Q", "K", "B", "N", "R"}
     };
     
     //positionMeta array is filled with the default chess position's meta
@@ -72,21 +76,21 @@ public class ChessGameDHC {
   
   public void makeMove(String piece, String startSquare, String targetSquare) {
     int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
-    int startSquareRank = (startSquare.charAt(1) - 1);
+    int startSquareRank = (startSquare.charAt(1) - '0') - 1;
 
     int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
-    int targetSquareRank = (targetSquare.charAt(1) - 1);
+    int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
     
     position[startSquareFile][startSquareRank] = "-";
     position[targetSquareFile][targetSquareRank] = piece;
   }
 
-  private String positionToString() {
-    String positionString;
+  public String positionToString() {
+    String positionString = "";
     
-    for (int i = 0, i < 8, i++) {
-      for (int n = 0, n < 8, n++) {
-        positionString += position[n][i];
+    for (int i = 7; i > -1; i--) {
+      for (int n = 0; n < 8; n++) {
+        positionString += position[i][n];
       }
       positionString += "\n";
     }
@@ -112,11 +116,16 @@ public class ChessGameDHC {
     //The startSquare string is seperated and turned into two integers
     //The integers need to be reduced by 1 since array coordinates start at 0
     int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
-    int startSquareRank = (startSquare.charAt(1) - 1);
+    int startSquareRank = (startSquare.charAt(1) - '0') - 1;
 
     //The targetSquare string is seperated
-    int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
-    int targetSquareRank = (targetSquare.charAt(1) - 1);
+    int targetSquareFile = (targetSquare.charAt(0) - 'a' + 1) - 1;
+    int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
+
+    System.out.println("Start square: " + startSquareFile + ", " + startSquareRank);
+    System.out.println("Target square: " + targetSquareFile + ", " + targetSquareRank);
+    System.out.println("Piece in position array: " + position[startSquareRank][startSquareFile]);
+    System.out.println("Piece specified in move: " + piece);
     
     //fileDiff and rankDiff is calculated (Math.abs = "absolute value" (Betrag))
     fileDiff = Math.abs(startSquareFile - targetSquareFile);
@@ -126,16 +135,16 @@ public class ChessGameDHC {
     if (isPieceSameColor(piece, playerToMove)) {
 
       //Checks if the target square exists to avoid crashes
-      if (targetSquareRank > 0
-          && targetSquareRank < 9
-          && targetSquareFile > 0
-          && targetSquareFile < 9) {
+      if (targetSquareRank >= 0
+          && targetSquareRank < 8
+          && targetSquareFile >= 0
+          && targetSquareFile < 8) {
         //This avoids crashes
-        if (null != piece.toLowerCase()) {
+        if (null != piece) {
           //Does such a piece even exist on the start square?
-          if (!"o-o".equals(piece.toLowerCase())
-              && !"o-o-o".equals(piece.toLowerCase())
-              && !piece.equals(position[startSquareFile][startSquareRank])) {
+          if (!"o-o".equalsIgnoreCase(piece)
+              && !"o-o-o".equalsIgnoreCase(piece)
+              && !piece.equalsIgnoreCase(position[startSquareFile][startSquareRank])) {
             return false;
           }
           
@@ -151,6 +160,7 @@ public class ChessGameDHC {
             
             //Is the piece a knight?
             case "n" -> {
+              System.out.println("piece is a knight");
               //If one of fileDiff and rankDiff is 1 and the other is 2, it's an L-shaped movement
               if ((fileDiff == 2 && rankDiff == 1)
                   || (fileDiff == 1 && rankDiff == 2)) {
@@ -163,6 +173,7 @@ public class ChessGameDHC {
             
             //Is the piece a bishop?
             case "b" -> {
+              System.out.println("piece is a bishop");
               //If fileDiff == rankDiff, it's a diagonal movement
               if (fileDiff == rankDiff) {
                 //Is the path clear of any other pieces?
@@ -237,8 +248,8 @@ public class ChessGameDHC {
             default -> {isMovePossible = false;}
           }
         }
-      }
-    }
+      } else {System.out.println("one of the squares doesnt exist " + startSquareFile + " " + startSquareRank + " "  + targetSquareFile + " " + targetSquareRank);}
+    } else {System.out.println("wrong player to move");}
 
     //If the piece is being moved to the same square it starts from, the move is declared as illegal last-minute
     if (startSquare.equals(targetSquare)) {
