@@ -19,8 +19,17 @@ public class ChessGameDHC {
   }
 
   public static void main(String[] args) {
-      @SuppressWarnings("unused")
-      ChessGameDHC test = new ChessGameDHC();
+      newDefaultPosition();
+      String playerToMove = "w";
+      Scanner input = new Scanner(System.in);
+      while(true) {
+        System.out.prinln("Current position:");
+        System.out.println();
+        System.out.println("Enter your move (" + playerToMove + " to move):");
+        moveMade = input.nextString();
+        if (isMovePossible(moveMade)) {
+        }
+      }
   }
 
   //Every array is assigned the values of the default chess position
@@ -42,9 +51,16 @@ public class ChessGameDHC {
     //Order: white O-O, white O-O-O, black O-O, black O-O-O, halfmoves, check
     positionMeta = new int[] {0, 0, 0, 0, 0, 0};
   }
+  
+  public void makeMove(String piece, String startSquare, String targetSquare) {
+    int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
+    int startSquareRank = (startSquare.charAt(1) - 1);
 
-  public String[][] getPosition() {
-    return position;
+    int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
+    int targetSquareRank = (targetSquare.charAt(1) - 1);
+    
+    position[startSquareFile][startSquareRank] = "-";
+    position[targetSquareFile][targetSquareRank] = piece;
   }
 
   public int[] getPositionMeta() {
@@ -102,8 +118,10 @@ public class ChessGameDHC {
             //Is the piece a pawn?
             case "p" -> {
               if(checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
-                return true;}
+                isMovePossible = true;
               }
+              break;
+            }
             
             //Is the piece a knight?
             case "n" -> {
@@ -114,6 +132,7 @@ public class ChessGameDHC {
                   isMovePossible = true;
                 }
               }
+              break;
             }
             
             //Is the piece a bishop?
@@ -127,6 +146,7 @@ public class ChessGameDHC {
                   }
                 }
               }
+              break;
             }
 
             //Is the piece a rook?
@@ -140,6 +160,7 @@ public class ChessGameDHC {
                   }
                 }
               }
+              break;
             }
 
             //Is the piece a queen?
@@ -158,9 +179,10 @@ public class ChessGameDHC {
                   }
                 }
               }
+              break;
             }
 
-            //Is the piece a king?
+            //Is the piece a king? Checks aren't implemented yet
             case "k" -> {
               //If there is at least one difference that equals 1, it's a 1 square queen movement
               if (fileDiff == 1 || rankDiff == 1) {
@@ -168,6 +190,7 @@ public class ChessGameDHC {
                   isMovePossible = true;
                 }
               }
+              break;
             }
 
             //Is the move castling?
@@ -175,11 +198,13 @@ public class ChessGameDHC {
               if (canCastleHere(piece)) {
                 isMovePossible = true;
               }
+              break;
             }
             case "o-o" -> {
               if (canCastleHere(piece)) {
                 isMovePossible = true;
               }
+              break;
             }
 
             //If the piece isn't  recognized, the move is obviously not legal
