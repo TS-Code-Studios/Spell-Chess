@@ -1,6 +1,6 @@
 package com.javadevs;
 //Author: @FRBFStudios
-//Version: 16/1/2024
+//Version: 20/1/2024
 //See INFORMATION.md for more info
 
 public class ChessGameDHC {
@@ -18,16 +18,34 @@ public class ChessGameDHC {
     newDefaultPosition();
   }
 
+  //Main method starts a text-controlled test game
   public static void main(String[] args) {
-      newDefaultPosition();
+      ChessGameDHC testGame = new ChessGameDHC();
+      bool moveWasMade = false;
       String playerToMove = "w";
+      String moveMade;
       Scanner input = new Scanner(System.in);
+
+      //Testgame loop
       while(true) {
         System.out.prinln("Current position:");
-        System.out.println();
-        System.out.println("Enter your move (" + playerToMove + " to move):");
-        moveMade = input.nextString();
-        if (isMovePossible(moveMade)) {
+        System.out.println(testGame.positionToString);
+        System.out.println("Enter your move in the format \"piece startSquare targetSquare\". " + playerToMove + " to move.");
+       
+        while(!moveWasMade) {
+          moveMade = input.nextString();
+          String[] moveComponents = moveMade.split(" ");
+          if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
+            testGame.makeMove(piece, startSquare, targetSquare);
+            moveWasMade = true;
+          } else {
+            System.out.println("Illegal move! Try again.");
+          }
+        }
+        if (playerToMove == "w") {
+          playerToMove = "B";
+        } else {
+          playerToMove = "w";
         }
       }
   }
@@ -63,8 +81,16 @@ public class ChessGameDHC {
     position[targetSquareFile][targetSquareRank] = piece;
   }
 
-  public int[] getPositionMeta() {
-    return positionMeta;
+  private String positionToString() {
+    String positionString;
+    
+    for (int i = 0, i < 8, i++) {
+      for (int n = 0, n < 8, n++) {
+        positionString += position[n][i];
+      }
+      positionString += "\n";
+    }
+    return positionString;
   }
 
   //Checks whether or not two pieces are of the same color
