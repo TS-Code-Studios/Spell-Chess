@@ -5,7 +5,7 @@ package com.javadevs;
 
 import java.util.Scanner;
 
-public class ChessGameDHC {
+public class ChessGameHandler {
   //This 2D array contains the chess position to be displayed on the board
   String[][] position;
   //This 1D array contains info such as En Passant target squares, the last move, castling availability, etc.
@@ -16,13 +16,13 @@ public class ChessGameDHC {
   int rankDiff;
 
   //Constructor
-  ChessGameDHC() {
+  public ChessGameHandler() {
     newDefaultPosition();
   }
 
   //Main method starts a text-controlled test game
   public static void main(String[] args) {
-      ChessGameDHC testGame = new ChessGameDHC();
+      ChessGameHandler testGame = new ChessGameHandler();
       boolean moveWasMade = false;
       String playerToMove = "w";
       String moveMade;

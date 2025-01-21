@@ -2,9 +2,8 @@
 This is a way of quickly describing the purpose of a class.
 
 - *Superior class*: A class which no object is ever created of. Instead, it creates objects of other classes to let them interact.
-- *Database class* (*DC*): A class serving as an external storage for raw, dynamic information in the form of its attributes. It has no methods.
-- *Array database class* (*ADC*): A special form of Database class for storing bundles of static information. It contains a single *ArrayList* method, returning an array with the set of values in a defined order that is given in one of the chapters below.
-- *Database handler class* (*DHC*): A class creating objects of DCs. It is used by GUIs, which can use its methods to either ask for a specific type of information to be directly displayed by the GUI, such as a string containing a lot of chained variables, or for changing a dynamic set of informations, following user input, using parameters.
+- *Array database class* (*ADC*): A class serving as an external storage for raw, dynamic information using arrays. It has no methods on its own.
+- *Handler Class*
 - *Graphical user interface class* (*GUI*): A class that creates a GUI window. It is also semi-superior, with the only thing ever creating an object of a GUI class being other superior classes.
 # Class list
 This is a list of every custom class of the project, along with its type and information about its purpose.
@@ -17,9 +16,9 @@ The ultimate superior class. Its only purpose is its *main()* function initiatin
 
 GUI class for the main menu. It's the secondmost superior class, with only *SpellChess* ever creating an object of it.
 
-**ChessHandlerDHC.java**
+**ChessGameHandler.java**
 
-DHC class that handles a standard game of chess. It's either launched from a "Play" button directly on the main menu, or (once implemented) from a "Play" button on a submenu where you can choose the settings for the game first (such as time controls).
+"Toolbox" with pretty much every method required for a vanilla chess game. These can be used by the ChessboardGUI class.
 
 **ChessboardGUI.java**
 
@@ -36,7 +35,7 @@ Names of the most important methods, variables, and objects.
 - *static void launchMainMenu()*: A method creating a new main menu window. 
 - *JFrame mainMenuFrame*: *JFrame* object acting as the main menu's window.
 
-**ChessHandlerDHC.java**
+**ChessGameHandler.java**
 
 - *boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove)*: Method that checks whether or not a move is possible and returns it as a boolean. *piece* needs to be lowercase if white and uppercase if black. *playerToMove* needs to be "w" or "B".
 - *String[][] position*: 2D array storing the current chess position.
