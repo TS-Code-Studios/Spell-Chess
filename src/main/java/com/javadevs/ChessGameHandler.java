@@ -22,18 +22,22 @@ public class ChessGameHandler {
 
   //Main method starts a text-controlled test game
   public static void main(String[] args) {
-      ChessGameHandler testGame = new ChessGameHandler();
-      boolean moveWasMade = false;
-      String playerToMove = "w";
-      String moveMade;
-      Scanner input = new Scanner(System.in);
-
+    ChessGameHandler testGame = new ChessGameHandler();
+    boolean moveWasMade;
+    String playerToMove = "w";
+    String moveMade;
+    try (Scanner input = new Scanner(System.in)) {
       //Testgame loop
       while(true) {
+        //The moveWasMade variable is reset
+        moveWasMade = false;
+
+        //The current position is printed out in the terminal
         System.out.println("Current position:");
         System.out.println(testGame.positionToString());
         System.out.println("Enter your move in the format \"piece startSquare targetSquare\". " + playerToMove + " to move.");
-       
+          
+        //This will loop until a valid move is made
         while(!moveWasMade) {
           moveMade = input.nextLine();
           String[] moveComponents = moveMade.split(" ");
@@ -42,16 +46,19 @@ public class ChessGameHandler {
             moveWasMade = true;
             break;
           } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
-            System.out.println("Illegal move! Try again.");
-            System.out.println("piece " + moveComponents[0] + " startsquare " + moveComponents[1] + " targetsquare " + moveComponents[2]);
+            System.out.println("Illegal move!");
+            System.out.println("Try again:");
           }
         }
+        
+        //The player is switched
         if ("w".equals(playerToMove)) {
           playerToMove = "B";
         } else {
           playerToMove = "w";
         }
       }
+    }
   }
 
   //Every array is assigned the values of the default chess position
@@ -81,8 +88,8 @@ public class ChessGameHandler {
     int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
     int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
     
-    position[startSquareFile][startSquareRank] = "-";
-    position[targetSquareFile][targetSquareRank] = piece;
+    position[startSquareRank][startSquareFile] = "-";
+    position[targetSquareRank][targetSquareFile] = piece;
   }
 
   public String positionToString() {
@@ -99,13 +106,18 @@ public class ChessGameHandler {
 
   //Checks whether or not two pieces are of the same color
   public boolean isPieceSameColor(String piece1, String piece2) {
-    boolean isOfSameColor = false;
-
-    if (Character.isUpperCase(piece1.charAt(0)) == Character.isUpperCase(piece2.charAt(0))) {
-      isOfSameColor = true;
+    if (piece2.equals("w") || piece2.equals("B")) {
+        // piece2 is the playerToMove
+        if (piece2.equals("w")) {
+            return Character.isLowerCase(piece1.charAt(0)); // White's pieces are lowercase
+        } else if (piece2.equals("B")) {
+            return Character.isUpperCase(piece1.charAt(0)); // Black's pieces are uppercase
+        }
+    } else {
+        // piece2 is another piece
+        return (Character.isUpperCase(piece1.charAt(0)) == Character.isUpperCase(piece2.charAt(0)));
     }
-
-    return isOfSameColor;
+    return false;
   }
   
   //This method can check if a move is possible. So far, castling, absolute pins, promotions and en passant are not included. For playerToMove, use "w" and "B" respectively.
@@ -118,14 +130,11 @@ public class ChessGameHandler {
     int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
     int startSquareRank = (startSquare.charAt(1) - '0') - 1;
 
+
     //The targetSquare string is seperated
     int targetSquareFile = (targetSquare.charAt(0) - 'a' + 1) - 1;
     int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
 
-    System.out.println("Start square: " + startSquareFile + ", " + startSquareRank);
-    System.out.println("Target square: " + targetSquareFile + ", " + targetSquareRank);
-    System.out.println("Piece in position array: " + position[startSquareRank][startSquareFile]);
-    System.out.println("Piece specified in move: " + piece);
     
     //fileDiff and rankDiff is calculated (Math.abs = "absolute value" (Betrag))
     fileDiff = Math.abs(startSquareFile - targetSquareFile);
@@ -133,7 +142,6 @@ public class ChessGameHandler {
 
     //Checks if it's the right player to move, since capitalization = color
     if (isPieceSameColor(piece, playerToMove)) {
-
       //Checks if the target square exists to avoid crashes
       if (targetSquareRank >= 0
           && targetSquareRank < 8
@@ -144,7 +152,7 @@ public class ChessGameHandler {
           //Does such a piece even exist on the start square?
           if (!"o-o".equalsIgnoreCase(piece)
               && !"o-o-o".equalsIgnoreCase(piece)
-              && !piece.equalsIgnoreCase(position[startSquareFile][startSquareRank])) {
+              && !piece.equalsIgnoreCase(position[startSquareRank][startSquareFile])) {
             return false;
           }
           
@@ -160,7 +168,6 @@ public class ChessGameHandler {
             
             //Is the piece a knight?
             case "n" -> {
-              System.out.println("piece is a knight");
               //If one of fileDiff and rankDiff is 1 and the other is 2, it's an L-shaped movement
               if ((fileDiff == 2 && rankDiff == 1)
                   || (fileDiff == 1 && rankDiff == 2)) {
@@ -173,7 +180,6 @@ public class ChessGameHandler {
             
             //Is the piece a bishop?
             case "b" -> {
-              System.out.println("piece is a bishop");
               //If fileDiff == rankDiff, it's a diagonal movement
               if (fileDiff == rankDiff) {
                 //Is the path clear of any other pieces?
@@ -245,11 +251,14 @@ public class ChessGameHandler {
             }
 
             //If the piece isn't  recognized, the move is obviously not legal
-            default -> {isMovePossible = false;}
+            default -> {
+              isMovePossible = false;
+              System.out.println("DEBUG: The piece ID has not been recognized.");
+            }
           }
-        }
-      } else {System.out.println("one of the squares doesnt exist " + startSquareFile + " " + startSquareRank + " "  + targetSquareFile + " " + targetSquareRank);}
-    } else {System.out.println("wrong player to move");}
+        } else {System.out.println("DEBUG: The piece ID is null.");}
+      } else {System.out.println("DEBUG: One of the squares doesn't exist.");}
+    } else {System.out.println("DEBUG: Wrong player to move");}
 
     //If the piece is being moved to the same square it starts from, the move is declared as illegal last-minute
     if (startSquare.equals(targetSquare)) {
@@ -263,32 +272,37 @@ public class ChessGameHandler {
   //Since pawn logic is extra weird, it is seperated into a different method
   private boolean checkPawnMove(String piece, int startSquareFile, int startSquareRank, int targetSquareFile, int targetSquareRank) {
     boolean isPawnMovePossible = false;
-    
-    //Determine move direction and starting rank for pawns, using a ternary operator like this: variable = condition ? ifTrue : ifFalse
-    int moveDirection = "P".equals(piece) ? -1 : 1;
-    int startingRank = "P".equals(piece) ? 7 : 2;
-    
-    //Is the pawn staying on its file? Is the target square empty?
-    if (targetSquareFile == startSquareFile
-        && "-".equals(position[targetSquareFile][targetSquareRank])) {
-      //Is it moving 1 square forward?
-      if (startSquareRank + moveDirection == targetSquareRank) {
-        isPawnMovePossible = true;
-      }
-      
-      //Is it moving 2 squares forward from the starting rank?
-      else if (startSquareRank == startingRank
-          && startSquareRank + 2 * moveDirection == targetSquareRank) {
-        isPawnMovePossible = true;
-      }
-    }
 
-    //Is the pawn capturing a piece? (^ = XOR)
+    // Determine move direction and starting rank for pawns
+    int moveDirection = "P".equals(piece) ? -1 : 1;
+    int startingRank = "P".equals(piece) ? 6 : 1;  // Adjusted starting rank for white and black pawns
+
+    // Is the pawn staying on its file? Is the target square empty?
+    if (targetSquareFile == startSquareFile && "-".equals(position[targetSquareRank][targetSquareFile])) {
+
+        // Is it moving 1 square forward?
+        if (startSquareRank + moveDirection == targetSquareRank) {
+            isPawnMovePossible = true;
+        }
+        // Is it moving 2 squares forward from the starting rank?
+        else if (startSquareRank == startingRank && startSquareRank + 2 * moveDirection == targetSquareRank) {
+            // Check if the square in between is also empty
+            int intermediateRank = startSquareRank + moveDirection;
+            if ("-".equals(position[intermediateRank][startSquareFile])) {
+                isPawnMovePossible = true;
+            } else {
+                System.out.println("DEBUG: Square in between is not empty.");
+            }
+        }
+    }
+    // Is the pawn capturing a piece? (^ = XOR)
     else if ((startSquareFile - 1 == targetSquareFile ^ startSquareFile + 1 == targetSquareFile)
         && startSquareRank + moveDirection == targetSquareRank
-        && !isPieceSameColor(piece, position[targetSquareFile][targetSquareRank])) {
-      isPawnMovePossible = true;
+        && !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile])) {
+        System.out.println("DEBUG: Pawn is capturing a piece.");
+        isPawnMovePossible = true;
     }
+
     return isPawnMovePossible;
   }
 
@@ -305,7 +319,7 @@ public class ChessGameHandler {
     //Each square along the bishop's path is checked
     while(currentFile != targetSquareFile) {
       //If one of the squares isn't empty, the path is blocked and false is returned
-      if (!"-".equals(position[currentFile][currentRank])) {
+      if (!"-".equals(position[currentRank][currentFile])) {
         return false;
       }
       
@@ -328,7 +342,7 @@ public class ChessGameHandler {
       int currentRank = startSquareRank + rankDirection;
 
       while (currentRank != targetSquareRank) {
-        if (!"-".equals(position[startSquareFile][targetSquareRank])) {
+        if (!"-".equals(position[startSquareRank][startSquareFile])) {
           return false;
         }
 
@@ -342,7 +356,7 @@ public class ChessGameHandler {
       int currentFile = startSquareFile + fileDirection;
       
       while (currentFile != targetSquareFile) {
-        if (!"-".equals(position[targetSquareFile][targetSquareRank])) {
+        if (!"-".equals(position[targetSquareRank][targetSquareFile])) {
           return false;
         }
 
@@ -364,7 +378,7 @@ public class ChessGameHandler {
 
   //Small method for checking whether or not a square is empty or occupied by an opposing piece
   private boolean isEmptyOrOpposed(String piece, int targetSquareFile, int targetSquareRank) {
-    return "-".equals(position[targetSquareFile][targetSquareRank])
-            || !isPieceSameColor(piece, position[targetSquareFile][targetSquareRank]);
+    return "-".equals(position[targetSquareRank][targetSquareFile])
+      || !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile]);
   }
 }
