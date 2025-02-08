@@ -152,7 +152,7 @@ public class ChessGameHandler {
           //Does such a piece even exist on the start square?
           if (!"o-o".equalsIgnoreCase(piece)
               && !"o-o-o".equalsIgnoreCase(piece)
-              && !piece.equalsIgnoreCase(position[startSquareRank][startSquareFile])) {
+              && !piece.equals(position[startSquareRank][startSquareFile])) {
             return false;
           }
           
@@ -210,16 +210,19 @@ public class ChessGameHandler {
             case "q" -> {
               //The properties of the rook and bishop movement are combined
               if (fileDiff == rankDiff) {
+                System.out.println("DEBUG: Queen is moving diagonally.");
                 if (isDiagonalClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+                  System.out.println("DEBUG: Diagonal clear.");
                   if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
                     isMovePossible = true;
-                  }
+                  } else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
                 }
               } else if (fileDiff == 0 ^ rankDiff == 0) {
+                System.out.println("DEBUG: Queen is moving in a straight line.");
                 if(isStraightClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
                   if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
                     isMovePossible = true;
-                  }
+                  } else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
                 }
               }
               break;
@@ -320,6 +323,7 @@ public class ChessGameHandler {
     while(currentFile != targetSquareFile) {
       //If one of the squares isn't empty, the path is blocked and false is returned
       if (!"-".equals(position[currentRank][currentFile])) {
+        System.out.println("DEBUG: Diagonal is not clear.");
         return false;
       }
       
@@ -342,7 +346,8 @@ public class ChessGameHandler {
       int currentRank = startSquareRank + rankDirection;
 
       while (currentRank != targetSquareRank) {
-        if (!"-".equals(position[startSquareRank][startSquareFile])) {
+        if (!"-".equals(position[currentRank][startSquareFile])) {
+          System.out.println("DEBUG: Vertical straight is not clear.");
           return false;
         }
 
@@ -356,7 +361,8 @@ public class ChessGameHandler {
       int currentFile = startSquareFile + fileDirection;
       
       while (currentFile != targetSquareFile) {
-        if (!"-".equals(position[targetSquareRank][targetSquareFile])) {
+        if (!"-".equals(position[targetSquareRank][currentFile])) {
+          System.out.println("DEBUG: Horizontal straight is not clear.");
           return false;
         }
 
