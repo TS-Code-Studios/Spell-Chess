@@ -10,6 +10,8 @@ public class ChessGameHandler {
   String[][] position;
   //This 1D array contains info such as En Passant target squares, the last move, castling availability, etc.
   int[] positionMeta;
+  private boolean[] castlingWhiteInfo;
+  private boolean[] castlingBlackInfo;
 
   //These integers contain the difference in files and ranks for a move
   int fileDiff;
@@ -79,6 +81,43 @@ public class ChessGameHandler {
     //For true-or-false values, use "1" for true (such as if white can castle or not) and "0" for false.
     //Order: white O-O, white O-O-O, black O-O, black O-O-O, halfmoves, check
     positionMeta = new int[] {0, 0, 0, 0, 0, 0};
+    //Has king moved, has rook a moved, has rook h moved
+    castlingWhiteInfo = new boolean[] {false, false, false};
+    castlingBlackInfo = new boolean[] {false, false, false};
+  }
+
+  //Method to run AFTER making a move to update all castling info
+  public void castlingAvailabilityUpdate(String piece, String startSquare, String targetSquare) {
+    if (piece.equals("k")) {
+      castlingWhiteInfo[0] = true;
+    } else if (piece.equals("K")) {
+      castlingBlackInfo[0] = true;
+    } else if (piece.equals("r")) {
+      if (startSquare.charAt(0) == "a") {
+        castlingWhiteInfo[1] = true;  
+      } else if (startSquare.charAt(0) == "h") {
+        castlingWhiteInfo[2] = true; 
+      }
+    } else if (piece.equals("R")) {
+      if (startSquare.charAt(0) == "a") {
+        castlingBlackInfo[1] = true;  
+      } else if (startSquare.charAt(0) == "h") {
+        castlingBlackInfo[2] = true;
+      }
+    }
+    //Now the availabilities are updated
+    if (castlingWhiteInfo[0] == false) {
+      if (castlingWhiteInfo[1] == false &&
+          position[0][1].equals("-") &&
+          position[0][2].equals("-") &&
+          position[0][3].equals("-")) {
+        positionMeta[1] = 1;
+      }
+      if (castlingWhiteInfo[2] == false &&
+          position[0][5].equals("-") &&
+          position[0][6].equals("-")) {
+        positionMeta[0] = 1;
+      }
   }
   
   public void makeMove(String piece, String startSquare, String targetSquare) {
