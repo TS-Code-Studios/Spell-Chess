@@ -7,17 +7,33 @@ package com.javadevs.gui;
 import javax.swing.JFrame;
 
 import com.javadevs.ChessGameHandler;
+import com.javadevs.ChessButton;
+
+//für position[][] gilt: position[y][x] (im Array)
 
 public class ChessboardGUI 
 {
   @SuppressWarnings("unused")
   ChessGameHandler game = new ChessGameHandler();
- 	JFrame chessboardWindow;
-		JButton 
+ 	 JFrame chessboardWindow;
+	 
 
   public ChessboardGUI () 
 		{
     chessboardWindow = new JFrame();
     chessboardWindow.setVisible(true);
   	}
+	
+	public buttonInit()
+	{
+			int count = 0;
+			String countString = "";
+		
+			for(int i=0, i<16, i++)
+			{
+					countString = count;
+					new ChessButton(countString);
+					count = count + 1;
+			}
+		
 }
