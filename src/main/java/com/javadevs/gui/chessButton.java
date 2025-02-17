@@ -9,14 +9,17 @@ import com.javadevs.ChessGameHandler;
 
 public class ChessButton
 {
-			String name;
-			JButton baseButton;
-			String buttonPos;
-					
-			public ChessButton(String positionButton)
-			{
-					name = "button" + positionButton;
-					baseButton = new JButton;
-					buttonPos = positionButton;
-			}
+	String name;
+	JButton baseButton;
+	String posY;
+	String posX;
+	
+	public ChessButton(String posYNew, String posXNew)
+	{
+		name = "button" + posYNew + PosXNew;
+		baseButton = new JButton;
+		posY = posXNew;
+		posX = posYNew;
+	//2D array position[][] from ChessGameHandler.java has format 	
+	}
 }
