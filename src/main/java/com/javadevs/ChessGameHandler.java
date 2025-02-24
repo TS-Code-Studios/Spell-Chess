@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class ChessGameHandler {
   //This 2D array contains the chess position to be displayed on the board
-  String[][] position;
+  String[8][8] position;
   //This 1D array contains info such as En Passant target squares, the last move, castling availability, etc.
-  int[] positionMeta;
+  int[6] positionMeta;
   private boolean[] castlingWhiteInfo;
   private boolean[] castlingBlackInfo;
 
@@ -45,6 +45,7 @@ public class ChessGameHandler {
           String[] moveComponents = moveMade.split(" ");
           if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
             testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
+            testGame.castlingAvailabilityUpdate(moveComponents[0], moveComponents[1], moveComponents[2]);
             moveWasMade = true;
             break;
           } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
@@ -88,6 +89,19 @@ public class ChessGameHandler {
 
   //Method to run AFTER making a move to update all castling info
   public void castlingAvailabilityUpdate(String piece, String startSquare, String targetSquare) {
+    //If the player just castled, the availabilities are set to 0 and the method is stopped
+    if (piece.equals("o-o") || piece.equals("o-o-o")) {
+      castlingWhiteInfo[0] = true;
+      positionMeta[0] = 0;
+      positionMeta[1] = 0;
+      return;
+    } else if (piece.equals("O-O") || piece.equals("O-O-O")) {
+      castlingBlackInfo[0] = true;
+      positionMeta[2] = 0;
+      positionMeta[3] = 0;
+      return;
+    }
+    
     if (piece.equals("k")) {
       castlingWhiteInfo[0] = true;
     } else if (piece.equals("K")) {
@@ -106,21 +120,89 @@ public class ChessGameHandler {
       }
     }
     //Now the availabilities are updated
+    //Did the white king move?
     if (castlingWhiteInfo[0] == false) {
+      //White castle queenside
       if (castlingWhiteInfo[1] == false &&
           position[0][1].equals("-") &&
           position[0][2].equals("-") &&
           position[0][3].equals("-")) {
         positionMeta[1] = 1;
       }
+      //White castle kingside
       if (castlingWhiteInfo[2] == false &&
           position[0][5].equals("-") &&
           position[0][6].equals("-")) {
         positionMeta[0] = 1;
       }
+    }
+    //Did the black king move?
+    if (castlingBlackInfo[0] == false) {
+      //Black castle queenside
+      if (castlingBlackInfo[1] == false &&
+          position[7][1].equals("-") &&
+          position[7][2].equals("-") &&
+          position[7][3].equals("-")) {
+        positionMeta[3] = 1;
+      }
+      //Black castle kingside
+      if (castlingBlackInfo[2] == false &&
+          position[7][5].equals("-") &&
+          position[7][6].equals("-")) {
+        positionMeta[2] = 1;
+      }
   }
   
   public void makeMove(String piece, String startSquare, String targetSquare) {
+    //Is white castling kingside?
+    if (piece.equals("o-o")) {
+      //Former rook and king squares are cleared
+      position[0][4] = "-";
+      position[0][7] = "-";
+      //King and rook are moved to their new position
+      position[0][6] = "k";
+      position[0][5] = "r";
+      //Castling is banned for the rest of the game
+      positionMeta[0] = 0;
+      positionMeta[1] = 0;
+    }
+    
+    //Is white castling queenside?
+    if (piece.equals("o-o-o")) {
+      position[0][4] = "-";
+      position[0][0] = "-";
+      
+      position[0][2] = "k";
+      position[0][3] = "r";
+      
+      positionMeta[0] = 0;
+      positionMeta[1] = 0;
+    }
+  
+    //Is black castling kingside?
+    if (piece.equals("O-O")) {
+      position[7][4] = "-";
+      position[7][7] = "-";
+      
+      position[7][6] = "K";
+      position[7][5] = "R";
+
+      positionMeta[2] = 0;
+      positionMeta[3] = 0;
+    }
+
+    //Is black castling queenside?
+    if (piece.equals("O-O-O")) {
+      position[7][4] = "-";
+      position[7][0] = "-";
+      
+      position[7][2] = "K";
+      position[7][3] = "R";
+
+      positionMeta[2] = 0;
+      positionMeta[3] = 0;
+    }
+    
     int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
     int startSquareRank = (startSquare.charAt(1) - '0') - 1;
 
