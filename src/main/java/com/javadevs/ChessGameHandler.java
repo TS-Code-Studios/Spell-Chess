@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class ChessGameHandler {
   //This 2D array contains the chess position to be displayed on the board
-  String[8][8] position;
+  String[][] position;
   //This 1D array contains info such as En Passant target squares, the last move, castling availability, etc.
-  int[6] positionMeta;
+  int[] positionMeta;
   private boolean[] castlingWhiteInfo;
   private boolean[] castlingBlackInfo;
 
@@ -102,22 +102,31 @@ public class ChessGameHandler {
       return;
     }
     
-    if (piece.equals("k")) {
-      castlingWhiteInfo[0] = true;
-    } else if (piece.equals("K")) {
-      castlingBlackInfo[0] = true;
-    } else if (piece.equals("r")) {
-      if (startSquare.charAt(0) == "a") {
-        castlingWhiteInfo[1] = true;  
-      } else if (startSquare.charAt(0) == "h") {
-        castlingWhiteInfo[2] = true; 
-      }
-    } else if (piece.equals("R")) {
-      if (startSquare.charAt(0) == "a") {
-        castlingBlackInfo[1] = true;  
-      } else if (startSquare.charAt(0) == "h") {
-        castlingBlackInfo[2] = true;
-      }
+    switch (piece) {
+      case "k":
+        castlingWhiteInfo[0] = true;
+        break;
+      
+      case "K":
+        castlingBlackInfo[0] = true;
+        break;
+      
+      case "r":
+        if (startSquare.charAt(0) == 'a') { 
+          castlingWhiteInfo[1] = true;
+        } else if (startSquare.charAt(0) == 'h') {
+          castlingWhiteInfo[2] = true;
+        }       break;
+      
+      case "R":
+        if (startSquare.charAt(0) == 'a') {
+          castlingBlackInfo[1] = true;
+        } else if (startSquare.charAt(0) == 'h') {
+          castlingBlackInfo[2] = true;
+        }       break;
+      
+      default:
+        break;
     }
     //Now the availabilities are updated
     //Did the white king move?
@@ -149,10 +158,11 @@ public class ChessGameHandler {
       if (castlingBlackInfo[2] == false &&
           position[7][5].equals("-") &&
           position[7][6].equals("-")) {
-        positionMeta[2] = 1;
+          positionMeta[2] = 1;
       }
+    }
   }
-  
+
   public void makeMove(String piece, String startSquare, String targetSquare) {
     //Is white castling kingside?
     if (piece.equals("o-o")) {
@@ -246,6 +256,10 @@ public class ChessGameHandler {
   public boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove) {
     boolean isMovePossible = false;
 
+    if ((piece.equalsIgnoreCase("o-o") || piece.equalsIgnoreCase("o-o-o")) && canCastleHere(piece)) {
+      return true;
+    }
+    
     //The startSquare string is seperated and turned into two integers
     //The integers need to be reduced by 1 since array coordinates start at 0
     int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
@@ -361,18 +375,7 @@ public class ChessGameHandler {
             }
 
             //Is the move castling?
-            case "o-o-o" -> {
-              if (canCastleHere(piece)) {
-                isMovePossible = true;
-              }
-              break;
-            }
-            case "o-o" -> {
-              if (canCastleHere(piece)) {
-                isMovePossible = true;
-              }
-              break;
-            }
+
 
             //If the piece isn't  recognized, the move is obviously not legal
             default -> {
