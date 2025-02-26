@@ -25,28 +25,23 @@ public class ChessGameHandler {
   //Main method starts a text-controlled test game
   public static void main(String[] args) {
     ChessGameHandler testGame = new ChessGameHandler();
-    boolean moveWasMade;
     String playerToMove = "w";
     String moveMade;
     try (Scanner input = new Scanner(System.in)) {
       //Testgame loop
       while(true) {
-        //The moveWasMade variable is reset
-        moveWasMade = false;
-
         //The current position is printed out in the terminal
         System.out.println("Current position:");
         System.out.println(testGame.positionToString());
         System.out.println("Enter your move in the format \"piece startSquare targetSquare\". " + playerToMove + " to move.");
           
         //This will loop until a valid move is made
-        while(!moveWasMade) {
+        while(true) {
           moveMade = input.nextLine();
           String[] moveComponents = moveMade.split(" ");
           if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
             testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
             testGame.castlingAvailabilityUpdate(moveComponents[0], moveComponents[1], moveComponents[2]);
-            moveWasMade = true;
             break;
           } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
             System.out.println("Illegal move!");
@@ -164,63 +159,61 @@ public class ChessGameHandler {
   }
 
   public void makeMove(String piece, String startSquare, String targetSquare) {
-    //Is white castling kingside?
-    if (piece.equals("o-o")) {
-      //Former rook and king squares are cleared
-      position[0][4] = "-";
-      position[0][7] = "-";
-      //King and rook are moved to their new position
-      position[0][6] = "k";
-      position[0][5] = "r";
-      //Castling is banned for the rest of the game
-      positionMeta[0] = 0;
-      positionMeta[1] = 0;
-    }
-    
-    //Is white castling queenside?
-    if (piece.equals("o-o-o")) {
-      position[0][4] = "-";
-      position[0][0] = "-";
-      
-      position[0][2] = "k";
-      position[0][3] = "r";
-      
-      positionMeta[0] = 0;
-      positionMeta[1] = 0;
-    }
-  
-    //Is black castling kingside?
-    if (piece.equals("O-O")) {
-      position[7][4] = "-";
-      position[7][7] = "-";
-      
-      position[7][6] = "K";
-      position[7][5] = "R";
-
-      positionMeta[2] = 0;
-      positionMeta[3] = 0;
-    }
-
-    //Is black castling queenside?
-    if (piece.equals("O-O-O")) {
-      position[7][4] = "-";
-      position[7][0] = "-";
-      
-      position[7][2] = "K";
-      position[7][3] = "R";
-
-      positionMeta[2] = 0;
-      positionMeta[3] = 0;
-    }
-    
-    int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
-    int startSquareRank = (startSquare.charAt(1) - '0') - 1;
-
-    int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
-    int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
-    
-    position[startSquareRank][startSquareFile] = "-";
-    position[targetSquareRank][targetSquareFile] = piece;
+      //Is white castling kingside?
+      switch (piece) {
+          case "o-o" -> {
+              //Former rook and king squares are cleared
+              position[0][4] = "-";
+              position[0][7] = "-";
+              //King and rook are moved to their new position
+              position[0][6] = "k";
+              position[0][5] = "r";
+              //Castling is banned for the rest of the game
+              positionMeta[0] = 0;
+              positionMeta[1] = 0;
+          }
+          //Is white castling queenside?
+          case "o-o-o" -> {
+              position[0][4] = "-";
+              position[0][0] = "-";
+              position[0][2] = "k";
+              position[0][3] = "r";
+              positionMeta[0] = 0;
+              positionMeta[1] = 0;
+          }
+          //Is black castling kingside?
+          case "O-O" -> {
+              position[7][4] = "-";
+              position[7][7] = "-";
+              position[7][6] = "K";
+              position[7][5] = "R";
+              positionMeta[2] = 0;
+              positionMeta[3] = 0;
+          }
+          //Is black castling queenside?
+          case "O-O-O" -> {
+              position[7][4] = "-";
+              position[7][0] = "-";
+              position[7][2] = "K";
+              position[7][3] = "R";
+              positionMeta[2] = 0;
+              positionMeta[3] = 0;
+          }
+          default -> {
+              try {
+                  int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
+                  int startSquareRank = (startSquare.charAt(1) - '0') - 1;
+                  
+                  int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
+                  int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
+                  
+                  position[startSquareRank][startSquareFile] = "-";
+                  position[targetSquareRank][targetSquareFile] = piece;
+              } catch (Exception invalidMoveInput) {
+                  System.err.println("Invalid move input");
+              }
+          }
+      }
   }
 
   public String positionToString() {
@@ -252,8 +245,13 @@ public class ChessGameHandler {
   }
   
   //This method can check if a move is possible. So far, castling, absolute pins, promotions and en passant are not included. For playerToMove, use "w" and "B" respectively.
-  //If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters to avoid crashes.
+  //If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters.
   public boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove) {
+    //Avoids nullPointerExceptions
+    if (piece == null || startSquare == null || targetSquare == null) {
+      System.err.println("DEBUG: An input equals null");
+      return false;
+    }
     boolean isMovePossible = false;
 
     if ((piece.equalsIgnoreCase("o-o") || piece.equalsIgnoreCase("o-o-o")) && canCastleHere(piece)) {
@@ -282,114 +280,113 @@ public class ChessGameHandler {
           && targetSquareRank < 8
           && targetSquareFile >= 0
           && targetSquareFile < 8) {
-        //This avoids crashes
-        if (null != piece) {
-          //Does such a piece even exist on the start square?
-          if (!"o-o".equalsIgnoreCase(piece)
-              && !"o-o-o".equalsIgnoreCase(piece)
-              && !piece.equals(position[startSquareRank][startSquareFile])) {
-            return false;
-          }
+        
+        //Does such a piece even exist on the start square?
+        if (!"o-o".equalsIgnoreCase(piece)
+            && !"o-o-o".equalsIgnoreCase(piece)
+            && !piece.equals(position[startSquareRank][startSquareFile])) {
+          return false;
+        }
           
-          //Which piece is it?
-          switch (piece.toLowerCase()) {
-            //Is the piece a pawn?
-            case "p" -> {
-              if(checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+        //Which piece is it?
+        switch (piece.toLowerCase()) {
+          //Is the piece a pawn?
+          case "p" -> {
+            if(checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+              isMovePossible = true;
+            }
+            break;
+          }
+            
+          //Is the piece a knight?
+          case "n" -> {
+            //If one of fileDiff and rankDiff is 1 and the other is 2, it's an L-shaped movement
+            if ((fileDiff == 2 && rankDiff == 1)
+                || (fileDiff == 1 && rankDiff == 2)) {
+              if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
                 isMovePossible = true;
               }
-              break;
             }
-            
-            //Is the piece a knight?
-            case "n" -> {
-              //If one of fileDiff and rankDiff is 1 and the other is 2, it's an L-shaped movement
-              if ((fileDiff == 2 && rankDiff == 1)
-                  || (fileDiff == 1 && rankDiff == 2)) {
-                if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                  isMovePossible = true;
-                }
-              }
-              break;
-            }
-            
-            //Is the piece a bishop?
-            case "b" -> {
-              //If fileDiff == rankDiff, it's a diagonal movement
-              if (fileDiff == rankDiff) {
-                //Is the path clear of any other pieces?
-                if (isDiagonalClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
-                  if(isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                    isMovePossible = true;
-                  }
-                }
-              }
-              break;
-            }
-
-            //Is the piece a rook?
-            case "r" -> {
-              //If exclusively one of the differences is 0, it's a straight movement
-              if (fileDiff == 0 ^ rankDiff == 0) {
-                //Is the path clear of any other pieces?
-                if (isStraightClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
-                  if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                    isMovePossible = true;
-                  }
-                }
-              }
-              break;
-            }
-
-            //Is the piece a queen?
-            case "q" -> {
-              //The properties of the rook and bishop movement are combined
-              if (fileDiff == rankDiff) {
-                System.out.println("DEBUG: Queen is moving diagonally.");
-                if (isDiagonalClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
-                  System.out.println("DEBUG: Diagonal clear.");
-                  if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                    isMovePossible = true;
-                  } else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
-                }
-              } else if (fileDiff == 0 ^ rankDiff == 0) {
-                System.out.println("DEBUG: Queen is moving in a straight line.");
-                if(isStraightClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
-                  if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                    isMovePossible = true;
-                  } else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
-                }
-              }
-              break;
-            }
-
-            //Is the piece a king? Checks aren't implemented yet
-            case "k" -> {
-              //If there is at least one difference that equals 1, it's a 1 square queen movement
-              if (fileDiff == 1 || rankDiff == 1) {
-                if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                  isMovePossible = true;
-                }
-              }
-              break;
-            }
-
-            //Is the move castling?
-
-
-            //If the piece isn't  recognized, the move is obviously not legal
-            default -> {
-              isMovePossible = false;
-              System.out.println("DEBUG: The piece ID has not been recognized.");
-            }
+            break;
           }
-        } else {System.out.println("DEBUG: The piece ID is null.");}
-      } else {System.out.println("DEBUG: One of the squares doesn't exist.");}
-    } else {System.out.println("DEBUG: Wrong player to move");}
+            
+          //Is the piece a bishop?
+          case "b" -> {
+            //If fileDiff == rankDiff, it's a diagonal movement
+            if (fileDiff == rankDiff) {
+              //Is the path clear of any other pieces?
+              if (isDiagonalClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+                if(isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
+                  isMovePossible = true;
+                }
+              }
+            }
+            break;
+          }
+
+          //Is the piece a rook?
+          case "r" -> {
+            //If exclusively one of the differences is 0, it's a straight movement
+            if (fileDiff == 0 ^ rankDiff == 0) {
+              //Is the path clear of any other pieces?
+              if (isStraightClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+                if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
+                  isMovePossible = true;
+                }
+              }
+            }
+            break;
+          }
+
+          //Is the piece a queen?
+          case "q" -> {
+            //The properties of the rook and bishop movement are combined
+            if (fileDiff == rankDiff) {
+              System.out.println("DEBUG: Queen is moving diagonally.");
+              if (isDiagonalClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+                System.out.println("DEBUG: Diagonal clear.");
+                if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
+                  isMovePossible = true;
+                } else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
+              }
+            } else if (fileDiff == 0 ^ rankDiff == 0) {
+              System.out.println("DEBUG: Queen is moving in a straight line.");
+              if(isStraightClear(startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
+                if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
+                  isMovePossible = true;
+                } else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
+              }
+            }
+            break;
+          }
+
+          //Is the piece a king? Checks aren't implemented yet
+          case "k" -> {
+            //If there is at least one difference that equals 1, it's a 1 square queen movement
+            if (fileDiff == 1 || rankDiff == 1) {
+              if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
+                isMovePossible = true;
+              }
+            }
+            break;
+          }
+
+          //Is the move castling?
+
+
+          //If the piece isn't  recognized, the move is obviously not legal
+          default -> {
+            isMovePossible = false;
+            System.err.println("DEBUG: The piece ID has not been recognized.");
+          }
+        }
+      } else {System.err.println("DEBUG: One of the squares doesn't exist.");}
+    } else {System.err.println("DEBUG: Wrong player to move");}
 
     //If the piece is being moved to the same square it starts from, the move is declared as illegal last-minute
     if (startSquare.equals(targetSquare)) {
       isMovePossible = false;
+      System.err.println("DEBUG: targetSquare and startSquare are equal.");
     }
 
     //The boolean is returned
@@ -418,7 +415,7 @@ public class ChessGameHandler {
             if ("-".equals(position[intermediateRank][startSquareFile])) {
                 isPawnMovePossible = true;
             } else {
-                System.out.println("DEBUG: Square in between is not empty.");
+                System.err.println("DEBUG: Square in between is not empty.");
             }
         }
     }
@@ -426,7 +423,6 @@ public class ChessGameHandler {
     else if ((startSquareFile - 1 == targetSquareFile ^ startSquareFile + 1 == targetSquareFile)
         && startSquareRank + moveDirection == targetSquareRank
         && !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile])) {
-        System.out.println("DEBUG: Pawn is capturing a piece.");
         isPawnMovePossible = true;
     }
 
@@ -447,7 +443,7 @@ public class ChessGameHandler {
     while(currentFile != targetSquareFile) {
       //If one of the squares isn't empty, the path is blocked and false is returned
       if (!"-".equals(position[currentRank][currentFile])) {
-        System.out.println("DEBUG: Diagonal is not clear.");
+        System.err.println("DEBUG: Diagonal is not clear.");
         return false;
       }
       
@@ -471,7 +467,7 @@ public class ChessGameHandler {
 
       while (currentRank != targetSquareRank) {
         if (!"-".equals(position[currentRank][startSquareFile])) {
-          System.out.println("DEBUG: Vertical straight is not clear.");
+          System.err.println("DEBUG: Vertical straight is not clear.");
           return false;
         }
 
@@ -486,7 +482,7 @@ public class ChessGameHandler {
       
       while (currentFile != targetSquareFile) {
         if (!"-".equals(position[targetSquareRank][currentFile])) {
-          System.out.println("DEBUG: Horizontal straight is not clear.");
+          System.err.println("DEBUG: Horizontal straight is not clear.");
           return false;
         }
 
