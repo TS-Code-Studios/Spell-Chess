@@ -31,9 +31,12 @@ public class ChessboardGUI
 		
 			for(int i=0, i<16, i++)
 			{
-					countString = count;
+					countString = i;
 					new ChessButton(countString);
-					count = count + 1;
 			}
+
+	
+
+
 		
 }
