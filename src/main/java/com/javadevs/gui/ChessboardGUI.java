@@ -34,7 +34,7 @@ public class ChessboardGUI
 					countString = i;
 					new ChessButton(countString);
 			}
-
+	
 	
 
 
