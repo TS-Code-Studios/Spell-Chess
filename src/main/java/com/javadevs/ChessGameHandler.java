@@ -1,6 +1,6 @@
 package com.javadevs;
 //Author: @FRBFStudios
-//Version: 20/1/2024
+//Version: 10. 3. 2025
 //See INFORMATION.md for more info
 
 import java.util.Scanner;
@@ -214,6 +214,34 @@ public class ChessGameHandler {
               }
           }
       }
+  }
+
+  //Method for checking all the squares covered by a piece after it moves and setting those to "[" for white coverage,"]" for black coverage and "%" for both
+  //This needs to be run BEFORE the player to move is changed!
+  //Reverting squares no longer covered isn't implemented yet
+  private void updateCoveredSquares(String piece, String square) {
+    //Iterates through every file
+    for (int fileInt = 0; file < 8; file++) {
+      String file = Character.toString((char) ('a' + fileInt));
+      System.out.println("DEBUG: Checking file " + file + " translated from integer " + fileInt);
+      //Iterates through every rank
+      for (int rank = 0; rank < 8; rank++) {
+        String checkSquare = file + (rank + 1)
+        System.out.println("DEBUG: Checking rank " + rank + " combined with file " + file + " resulting in Square " + checkSquare);
+        if (isMovePossible(piece, square,  checkSquare)) {
+          //If the square isn't covered by any pieces yet, it is set to "[" or "]" respectively
+          if (position[fileInt][rank].equals("-")) {
+            if (piece.isLowerCase) {
+              position[fileInt][rank] = "[";
+            } else {
+              position[fileInt][rank] = "]";
+            }
+          } else if (position[fileInt][rank].equals("[") || position[fileInt][rank].equals("]")) {
+            position[fileInt][rank] = "%";
+          }
+        }
+      }
+    }
   }
 
   public String positionToString() {
