@@ -1,9 +1,12 @@
 package com.javadevs;
+
 //Author: @FRBFStudios
 //Version: 10. 3. 2025
 //See INFORMATION.md for more info
 
 import java.util.Scanner;
+import java.util.List;
+import java.util.Arrays;
 
 public class ChessGameHandler {
   //This 2D array contains the chess position to be displayed on the board
@@ -12,10 +15,12 @@ public class ChessGameHandler {
   int[] positionMeta;
   private boolean[] castlingWhiteInfo;
   private boolean[] castlingBlackInfo;
+  private
 
   //These integers contain the difference in files and ranks for a move
   int fileDiff;
   int rankDiff;
+  List<String> emptySquares = Arrays.asList("-","[", "]", "%");
 
   //Constructor
   public ChessGameHandler() {
@@ -392,8 +397,21 @@ public class ChessGameHandler {
           case "k" -> {
             //If there is at least one difference that equals 1, it's a 1 square queen movement
             if (fileDiff == 1 || rankDiff == 1) {
-              if (isEmptyOrOpposed(piece, targetSquareFile, targetSquareRank)) {
-                isMovePossible = true;
+              //The king is the only piece that doesn't use isEmptyOrOpposed, as that would allow him to move to squares controlled by the enemy
+              //If it's a white king, it can only move to "-" and "[" squares
+              if (piece.equals("k")) {
+                if (position[targetSquareFile][targetSquareRank].equals("-")
+                    || position[targetSquareFile][targetSquareRank].equals("[")
+                    || !isPieceSameColor(piece, position[targetSquareFile][targetSquareRank])) {
+                  isMovePossible = true;
+                }
+              //If it's a black king, it can only move to "-" and "]" squares
+              } else if (piece.equals("K")) {
+                if (position[targetSquareFile][targetSquareRank].equals("-")
+                    || position[targetSquareFile][targetSquareRank].equals("]")
+                    || !isPieceSameColor(piece, position[targetSquareFile][targetSquareRank])) {
+                  isMovePossible = true;
+                }
               }
             }
             break;
@@ -451,7 +469,7 @@ public class ChessGameHandler {
     else if ((startSquareFile - 1 == targetSquareFile ^ startSquareFile + 1 == targetSquareFile)
         && startSquareRank + moveDirection == targetSquareRank
         && !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile])) {
-        isPawnMovePossible = true;
+      isPawnMovePossible = true;
     }
 
     return isPawnMovePossible;
@@ -532,7 +550,8 @@ public class ChessGameHandler {
 
   //Small method for checking whether or not a square is empty or occupied by an opposing piece
   private boolean isEmptyOrOpposed(String piece, int targetSquareFile, int targetSquareRank) {
-    return "-".equals(position[targetSquareRank][targetSquareFile])
-      || !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile]);
+    if(emptySquares.contains(position[targetSquareFile][targetSquareRank]) || !isPieceSameColor(position[targetSquareFile][targetSquareRank], piece)) {
+      return true;
+    } else {return false;}
   }
 }
