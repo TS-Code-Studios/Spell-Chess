@@ -11,27 +11,31 @@ import javax.swing;
 
 public class Chessboard extends JPanel
 {
+    List<chessButton> buttons;
+    int count;
+    int countRow;
+
     public Chessboard()
     {
-        //FF
+       
     }
     
     public void buttonInit()
-  {
-    count = 0;
-    columnInit("a");
-    columnInit("b");
-    columnInit("c");
-    columnInit("d");
-    columnInit("e");
-    columnInit("f");
-    columnInit("g");
-    columnInit("h");
-  }
+    {
+      count = 0;
+      columnInit("a");
+      columnInit("b");
+      columnInit("c");
+      columnInit("d");
+      columnInit("e");
+      columnInit("f");
+      columnInit("g");
+      columnInit("h");
+    }
 
   public void columnInit(String column)
-  {
-    for(int i=0; i<8; i++)
+    {
+      for(int i=0; i<8; i++)
     {
       chessButton button = new chessButton( column, String.valueOf(countRow));
       buttons.add(button);

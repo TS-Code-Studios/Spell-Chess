@@ -16,11 +16,6 @@ import com.javadevs.ChessGameHandler;
 public class ChessboardGUI extends JFrame;
 {
   @SuppressWarnings("unused")
-  ChessGameHandler game = new ChessGameHandler();
-  JFrame chessboardWindow;
-  List<chessButton> buttons;
-  int count;
-  int countRow;
 
   public ChessboardGUI () 
   {
