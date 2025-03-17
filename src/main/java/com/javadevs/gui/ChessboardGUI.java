@@ -18,14 +18,9 @@ public class ChessboardGUI extends JFrame;
   @SuppressWarnings("unused")
   ChessGameHandler game = new ChessGameHandler();
   JFrame chessboardWindow;
-  List<cheessButton> buttonsA;
-  List<chessButton> buttonsB;
-  List<chessButton> buttonsC;
-  List<chessButton> buttonsD;
-  List<chessButton> buttonsE;
-  List<chessButton> buttonsF;
-  List<chessButton> buttonsG;
-  List<chessButton> buttonsH;
+  List<chessButton> buttons;
+  int count;
+  int countRow;
 
   public ChessboardGUI () 
   {
@@ -35,86 +30,27 @@ public class ChessboardGUI extends JFrame;
   @SuppressWarnings("static-access") 						//Otherwise causes trouble in buttonInit() for using setSquareColor()
 public void buttonInit()
   {
-    int count = 0;
-    int countA = 1;
+    count = 0;
+    columnInit("a");
+    columnInit("b");
+    columnInit("c");
+    columnInit("d");
+    columnInit("e");
+    columnInit("f");
+    columnInit("g");
+    columnInit("h");
+  }
 
-    //creates buttons for column a
+  public void columnInit(String column)
+  {
     for(int i=0; i<8; i++)
     {
-      chessButton button = new chessButton("a", String.valueOf(countA));
+      chessButton button = new chessButton( column, String.valueOf(countRow));
       buttons.add(button);
-      countA++;
+      countRow++;
       count++;
     }
-
-    //creates buttons for column b
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("b",String.valueOf(countA));
-      buttons.add(button);
-      countA++;
-      count++;
-    }
-
-    //creates buttons for column c
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("c", String.valueOf(countA));
-      buttons.add(button)
-      countA++;
-      count++;
-    }
-
-    //creates buttons for column d
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("d", String.valueOf(countA));
-      buttons.add(button);
-      countA++;
-      count++;
-    }
-
-    //creates buttons for column e
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("e", String.valueOf(countA));
-      buttons.add(button);
-      countA++;
-      count++;
-    }
-
-    //creates buttons for column f
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("f", String.valueOf(countA));
-      buttons.add(button);
-      countA++;
-      count++;
-    }
-
-    //creates buttons for column g 
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("g", String.valueOf(countA));
-      buttons.add(button);
-      countA++;
-      count++;
-    }
-
-    //creates buttons for column h
-    for(int i=0; i<8; i++)
-    {
-      chessButton button = new chessButton("h", String.valueOf(countA));
-      buttons.add(button);
-      countA++;
-      count++;
-    }
-    
-
-    // Call setSquareColor on each button
-    for (chessButton button : buttons) {
-      button.setSquareColor();
-    }
+    countRow = 1;
   }
 }
 
