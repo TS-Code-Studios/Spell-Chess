@@ -277,6 +277,28 @@ public class ChessGameHandler {
     }
   }
 
+  private void refreshControlledSquares() {
+    // Setze alle Felder auf nicht kontrolliert zurück
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 8; file++) {
+            position[rank][file] = position[rank][file].replace('[', '-').replace(']', '-').replace('%', '-');
+        }
+    }
+
+    // Aktualisiere die Kontrolle basierend auf allen Figuren auf dem Brett
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 8; file++) {
+            String square = Character.toString((char) ('a' + file)) + (rank + 1);
+            String piece = position[rank][file];
+            if (piece != null && !piece.equals("-")) {
+                String playerToMove = Character.isLowerCase(piece.charAt(0)) ? "w" : "B";
+                updateCoveredSquares(piece, square, playerToMove);
+            }
+        }
+    }
+}
+
+
   public String positionToString() {
     String positionString = "";
     
