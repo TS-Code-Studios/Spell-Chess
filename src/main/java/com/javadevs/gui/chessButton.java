@@ -6,8 +6,7 @@ package com.javadevs.gui;
 
 import javax.swing.JButton;
 
-public class chessButton 
-extends JButton
+public class chessButton extends JButton
 {
     @SuppressWarnings("unused")
     String name;
@@ -16,6 +15,7 @@ extends JButton
     static String color;
     static int intX;
     static int intY;
+    public String color;
     
     public chessButton(String posXNew, String posYNew)
     {
@@ -25,9 +25,9 @@ extends JButton
         //2D array position[][] from ChessGameHandler.java has format position[y][x]
     }
     
-    public static void convertPosition(String pos) 
+    public static void convertPosition(String pos)
     {
-        intX = pos.charAt(0) - 'a'; 								// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
+        intX = pos.charAt(0) - 'a'; 	        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
         intY = Character.getNumericValue(pos.charAt(1)) - 1; 		// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
     }
 

@@ -15,19 +15,30 @@ public class Chessboard extends JPanel
     {
         //FF
     }
+    
+    public void buttonInit()
+  {
+    count = 0;
+    columnInit("a");
+    columnInit("b");
+    columnInit("c");
+    columnInit("d");
+    columnInit("e");
+    columnInit("f");
+    columnInit("g");
+    columnInit("h");
+  }
 
-
-    public buttonInit()
+  public void columnInit(String column)
+  {
+    for(int i=0; i<8; i++)
     {
-        int count = 0;
-        String countString = "";
-       
-        for(int i=0, i<16, i++)
-        {
-            countString = i;
-            new ChessButton(countString);
-        }
-      }
-
+      chessButton button = new chessButton( column, String.valueOf(countRow));
+      buttons.add(button);
+      countRow++;
+      count++;
+    }
+    countRow = 1;
+  }
     
 }
