@@ -33,7 +33,7 @@ Cursive things are already done.
 
 **Step 2: Develop vanilla chess**
 - Create a board (Simon)
-- Create pieces (Theodor)
+- *Create pieces (Theodor)*
 - Implement rules and turns (Theodor)
 - Implement notation (Aaron)
 - Optional: Develop an engine

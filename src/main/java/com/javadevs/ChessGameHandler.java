@@ -1,7 +1,7 @@
 package com.javadevs;
 
 //Author: @FRBFStudios
-//Version: 10. 3. 2025
+//Version: 20. 3. 2025
 //See INFORMATION.md for more info
 
 import java.util.Arrays;
@@ -15,7 +15,8 @@ public class ChessGameHandler {
   int[] positionMeta;
   private boolean[] castlingWhiteInfo;
   private boolean[] castlingBlackInfo;
-  private
+
+  String playerToMove = "w";
 
   //These integers contain the difference in files and ranks for a move
   int fileDiff;
@@ -30,7 +31,6 @@ public class ChessGameHandler {
   //Main method starts a text-controlled test game
   public static void main(String[] args) {
     ChessGameHandler testGame = new ChessGameHandler();
-    String playerToMove = "w";
     String moveMade;
     try (Scanner input = new Scanner(System.in)) {
       //Testgame loop
@@ -46,7 +46,6 @@ public class ChessGameHandler {
           String[] moveComponents = moveMade.split(" ");
           if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
             testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
-            testGame.updateCoveredSquares(moveComponents[0], moveComponents[2], playerToMove);
             testGame.castlingAvailabilityUpdate(moveComponents[0], moveComponents[1], moveComponents[2]);
             break;
           } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
@@ -83,9 +82,9 @@ public class ChessGameHandler {
     //For true-or-false values, use "1" for true (such as if white can castle or not) and "0" for false.
     //Order: white O-O, white O-O-O, black O-O, black O-O-O, halfmoves, check
     positionMeta = new int[] {0, 0, 0, 0, 0, 0};
-    //Has king moved, has rook a moved, has rook h moved
-    castlingWhiteInfo = new boolean[] {false, false, false};
-    castlingBlackInfo = new boolean[] {false, false, false};
+    //Has king moved, has rook a moved, has rook h moved, is in check
+    castlingWhiteInfo = new boolean[] {false, false, false, false};
+    castlingBlackInfo = new boolean[] {false, false, false, false};
   }
 
   //Method to run AFTER making a move to update all castling info
@@ -131,7 +130,7 @@ public class ChessGameHandler {
     }
     //Now the availabilities are updated
     //Did the white king move?
-    if (castlingWhiteInfo[0] == false) {
+    if (!castlingWhiteInfo && !castlingWhiteInfo[3]) {
       //White castle queenside
       if (castlingWhiteInfo[1] == false &&
           (position[0][1].equals("-") || position[0][1].equals("[")) &&
@@ -147,7 +146,7 @@ public class ChessGameHandler {
       }
     }
     //Did the black king move?
-    if (castlingBlackInfo[0] == false) {
+    if (!castlingBlackInfo[0] && !castlingBlackInfo[3]) {
       //Black castle queenside
       if (castlingBlackInfo[1] == false &&
           (position[7][1].equals("-") || position[7][1].equals("]")) &&
@@ -206,26 +205,31 @@ public class ChessGameHandler {
               positionMeta[3] = 0;
           }
           default -> {
-              try {
-                  int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
-                  int startSquareRank = (startSquare.charAt(1) - '0') - 1;
-                  
-                  int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
-                  int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
-                  
-                  position[startSquareRank][startSquareFile] = "-";
-                  position[targetSquareRank][targetSquareFile] = piece;
-              } catch (Exception invalidMoveInput) {
-                  System.err.println("Invalid move input");
-              }
+            try {
+              int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
+              int startSquareRank = (startSquare.charAt(1) - '0') - 1;
+              
+              int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
+              int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
+              
+              position[startSquareRank][startSquareFile] = "-";
+              position[targetSquareRank][targetSquareFile] = piece;
+
+              updateCoveredSquares();
+              castlingAvailabilityUpdate(piece, startSquare, targetSquare);
+              return;
+            } catch (Exception invalidMoveInput) {
+              System.err.println("Invalid move input");
+              return;
+            }
           }
+          updateCoveredSquares();
       }
   }
 
   //Method for checking all the squares covered by a piece after it moves and setting those to "[" for white coverage,"]" for black coverage and "%" for both
-  //This needs to be run BEFORE the player to move is changed!
-  //Reverting squares no longer covered isn't implemented yet
-  private void updateCoveredSquares(String piece, String square, String playerToMove) {
+  //This needs to be run BEFORE the player to move is changed or before the castling availability is updated!
+  private void simulateCoverage(String piece, String square) {
     //Pawn squares are controlled differently
     if (piece.equalsIgnoreCase("p")){
       int squareFile = (square.charAt(0) - 'a' + 1) - 1;
@@ -266,9 +270,15 @@ public class ChessGameHandler {
         //System.out.println("DEBUG: Checking rank " + rank + " combined with file " + file + " resulting in Square " + checkSquare);
         if (isMovePossible(piece, square,  checkSquare, playerToMove)) {
           if (Character.isLowerCase(piece.charAt(0))) {
+            if(position[rank][fileInt].equals("K")) {
+              castlingBlackInfo[3] = true;
+            } 
             position[rank][fileInt] = position[rank][fileInt].replace('-', '[');
             position[rank][fileInt] = position[rank][fileInt].replace(']', '%');
           } else {
+            if(position[rank][fileInt].equals("k")) {
+              castlingWhiteInfo[3] = true;
+            }
             position[rank][fileInt] = position[rank][fileInt].replace('-', ']');
             position[rank][fileInt] = position[rank][fileInt].replace('[', '%');
           }
@@ -277,7 +287,7 @@ public class ChessGameHandler {
     }
   }
 
-  private void refreshControlledSquares() {
+  private void updateCoveredSquares() {
     // Setze alle Felder auf nicht kontrolliert zurück
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
@@ -288,12 +298,12 @@ public class ChessGameHandler {
     // Aktualisiere die Kontrolle basierend auf allen Figuren auf dem Brett
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
-            String square = Character.toString((char) ('a' + file)) + (rank + 1);
-            String piece = position[rank][file];
-            if (piece != null && !piece.equals("-")) {
-                String playerToMove = Character.isLowerCase(piece.charAt(0)) ? "w" : "B";
-                updateCoveredSquares(piece, square, playerToMove);
-            }
+          String square = Character.toString((char) ('a' + file)) + (rank + 1);
+          String piece = position[rank][file];
+          if (piece != null && !piece.equals("-")) {
+            String playerToMove = Character.isLowerCase(piece.charAt(0)) ? "w" : "B";
+            simulateCoverage(piece, square, playerToMove);
+          }
         }
     }
 }
@@ -329,7 +339,7 @@ public class ChessGameHandler {
   
   //This method can check if a move is possible. So far, castling, absolute pins, promotions and en passant are not included. For playerToMove, use "w" and "B" respectively.
   //If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters.
-  public boolean isMovePossible(String piece, String startSquare, String targetSquare, String playerToMove) {
+  public boolean isMovePossible(String piece, String startSquare, String targetSquare) {
     //Avoids nullPointerExceptions
     if (piece == null || startSquare == null || targetSquare == null) {
       System.err.println("DEBUG: An input equals null");
