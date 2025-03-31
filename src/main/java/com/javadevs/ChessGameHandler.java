@@ -16,7 +16,7 @@ public class ChessGameHandler {
   private boolean[] castlingWhiteInfo;
   private boolean[] castlingBlackInfo;
 
-  String playerToMove = "w";
+  static String playerToMove = "w";
 
   //These integers contain the difference in files and ranks for a move
   int fileDiff;
@@ -42,24 +42,27 @@ public class ChessGameHandler {
           
         //This will loop until a valid move is made
         while(true) {
+          //The player input is read and stored as moveMade
           moveMade = input.nextLine();
+
+          //The components of the move (piece, startSquare, targetSquare) are stored in a string array.
           String[] moveComponents = moveMade.split(" ");
-          if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
+
+          //If the move entered is possible
+          if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2])) {
+            //Make the move and update castling availability, then break the while(true) loop
             testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
             testGame.castlingAvailabilityUpdate(moveComponents[0], moveComponents[1], moveComponents[2]);
             break;
-          } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], playerToMove)) {
+          //If it is illegal
+          } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2])) {
             System.out.println("Illegal move!");
             System.out.println("Try again:");
           }
         }
         
         //The player is switched
-        if ("w".equals(playerToMove)) {
-          playerToMove = "B";
-        } else {
-          playerToMove = "w";
-        }
+        playerToMove = Character.isLowerCase(playerToMove) ? "B" : "w";
       }
     }
   }
@@ -78,11 +81,13 @@ public class ChessGameHandler {
       {"R", "N", "B", "Q", "K", "B", "N", "R"}
     };
     
-    //positionMeta array is filled with the default chess position's meta
-    //For true-or-false values, use "1" for true (such as if white can castle or not) and "0" for false.
-    //Order: white O-O, white O-O-O, black O-O, black O-O-O, halfmoves, check
+    /*
+    positionMeta array is filled with the default chess position's meta.
+    1 = true, 0 = false
+    Order: white O-O, white O-O-O, black O-O, black O-O-O, halfmoves, check
+    */
     positionMeta = new int[] {0, 0, 0, 0, 0, 0};
-    //Has king moved, has rook a moved, has rook h moved, is in check
+    //Has king moved, has rook a moved, has rook h moved, is king in check
     castlingWhiteInfo = new boolean[] {false, false, false, false};
     castlingBlackInfo = new boolean[] {false, false, false, false};
   }
@@ -163,6 +168,7 @@ public class ChessGameHandler {
     }
   }
 
+  //Method for changing the position and positionMeta arrays, THIS DOES NOT CHECK IF THE MOVE IS POSSIBLE!
   public void makeMove(String piece, String startSquare, String targetSquare) {
       //Is white castling kingside?
       switch (piece) {
@@ -227,7 +233,7 @@ public class ChessGameHandler {
       }
   }
 
-  //Method for checking all the squares covered by a piece after it moves and setting those to "[" for white coverage,"]" for black coverage and "%" for both
+  //Method for checking all the squares a piece can cover from a square
   //This needs to be run BEFORE the player to move is changed or before the castling availability is updated!
   private void simulateCoverage(String piece, String square) {
     //Pawn squares are controlled differently
@@ -302,7 +308,7 @@ public class ChessGameHandler {
           String piece = position[rank][file];
           if (piece != null && !piece.equals("-")) {
             String playerToMove = Character.isLowerCase(piece.charAt(0)) ? "w" : "B";
-            simulateCoverage(piece, square, playerToMove);
+            simulateCoverage(piece, square);
           }
         }
     }
