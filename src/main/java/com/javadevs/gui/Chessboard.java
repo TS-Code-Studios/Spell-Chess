@@ -42,13 +42,27 @@ public class Chessboard extends JPanel
       for(int i=0; i<8; i++)
     {
       chessButton button = new chessButton( column, String.valueOf(countRow));
-      button.setPreferredSize(new Dimension(buttonSize, buttonSize));
+      buttonConfig(button);
       buttons.add(button);
       Chessboard.add(button);
       countRow++;
       count++;
     }
     countRow = 1;
+  }
+
+  public void buttonConfig(chessButton target)
+  {
+    target.setPreferredSize(new Dimension(buttonSize, buttonSize));
+
+    target.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+                system.out.println("arch btw");
+            }
+        });
   }
     
 }
