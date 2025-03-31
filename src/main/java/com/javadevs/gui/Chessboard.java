@@ -14,13 +14,17 @@ public class Chessboard extends JPanel
     List<chessButton> buttons;
     int count;
     int countRow;
+    int buttonSize;
 
     public Chessboard()
     {
-       
+        setLayout(new GridLayout(8, 8));
+        int panelWidth = 400;  // Width of the panel
+        buttonSize = panelWidth / 8; // Since it's an 8x8 grid, divide the panel size by 8
+        boardInit();
     }
     
-    public void buttonInit()
+    public void boardInit()
     {
       count = 0;
       columnInit("a");
@@ -38,7 +42,9 @@ public class Chessboard extends JPanel
       for(int i=0; i<8; i++)
     {
       chessButton button = new chessButton( column, String.valueOf(countRow));
+      button.setPreferredSize(new Dimension(buttonSize, buttonSize));
       buttons.add(button);
+      Chessboard.add(button);
       countRow++;
       count++;
     }
