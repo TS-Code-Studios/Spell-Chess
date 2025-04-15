@@ -44,17 +44,29 @@ public class ChessGameHandler {
         while(true) {
           //The player input is read and stored as moveMade
           moveMade = input.nextLine();
-
+          System.out.println("DEBUG: Input read as " + moveMade);
           //The components of the move (piece, startSquare, targetSquare) are stored in a string array.
           String[] moveComponents = moveMade.split(" ");
+          for (String component : moveComponents) {
+            System.out.println("DEBUG: " + component);
+          }
 
           //If the move entered is possible
           if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2])) {
             //Make the move and update castling availability, then break the while(true) loop
+            //System.out.println("DEBUG: Move is being made...");
             testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
+            //System.out.println("DEBUG: Move made successfully.");
+
+            //System.out.println("DEBUG: Updating covered squares...");
             testGame.updateCoveredSquares();
-            testGame.castlingAvailabilityUpdate(moveComponents[0], moveComponents[1], moveComponents[2]);
+            //System.out.println("DEBUG: Covered squares updated successfully.");
+
+            //System.out.println("DEBUG: Updating castling availabilities...");
+            testGame.castlingAvailabilityUpdate(moveComponents[0], moveComponents[1]);
+            //System.out.println("DEBUG: Castling availabilities updated successfully. Looping...");
             break;
+
           //If it is illegal
           } else if(!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2])) {
             System.out.println("Illegal move!");
@@ -74,14 +86,14 @@ public class ChessGameHandler {
     position = new String[][] {
       {"r", "n", "b", "q", "k", "b", "n", "r"},
       {"p", "p", "p", "p", "p", "p", "p", "p"},
-      {"[", "[", "[", "[", "[", "[", "[", "["},
       {"-", "-", "-", "-", "-", "-", "-", "-"},
       {"-", "-", "-", "-", "-", "-", "-", "-"},
-      {"]", "]", "]", "]", "]", "]", "]", "]"},
+      {"-", "-", "-", "-", "-", "-", "-", "-"},
+      {"-", "-", "-", "-", "-", "-", "-", "-"},
       {"P", "P", "P", "P", "P", "P", "P", "P"},
       {"R", "N", "B", "Q", "K", "B", "N", "R"}
     };
-    
+
     /*
     positionMeta array is filled with the default chess position's meta.
     1 = true, 0 = false
@@ -91,10 +103,11 @@ public class ChessGameHandler {
     //Has king moved, has rook a moved, has rook h moved, is king in check
     castlingWhiteInfo = new boolean[] {false, false, false, false};
     castlingBlackInfo = new boolean[] {false, false, false, false};
+    updateCoveredSquares();
   }
 
   //Method to run AFTER making a move to update all castling info
-  public void castlingAvailabilityUpdate(String piece, String startSquare, String targetSquare) {
+  public void castlingAvailabilityUpdate(String piece, String startSquare) {
     //If the player just castled, the availabilities are set to 0 and the method is stopped
     if (piece.equals("o-o") || piece.equals("o-o-o")) {
       castlingWhiteInfo[0] = true;
@@ -212,6 +225,7 @@ public class ChessGameHandler {
               positionMeta[3] = 0;
           }
           default -> {
+            System.out.println("DEBUG: Player is not castling.");
             try {
               int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
               int startSquareRank = (startSquare.charAt(1) - '0') - 1;
@@ -222,11 +236,8 @@ public class ChessGameHandler {
               position[startSquareRank][startSquareFile] = "-";
               position[targetSquareRank][targetSquareFile] = piece;
 
-
-              return;
             } catch (Exception invalidMoveInput) {
               System.err.println("Invalid move input");
-              return;
             }
           }
       }
@@ -235,8 +246,13 @@ public class ChessGameHandler {
   //Method for checking all the squares a piece can cover from a square
   //This needs to be run BEFORE the player to move is changed or before the castling availability is updated!
   private void simulateCoverage(String piece, String square) {
+    System.out.println("DEBUG: Piece is " + piece);
+    if (emptySquares.contains(piece)) {
+      return;
+    }
     //Pawn squares are controlled differently
     if (piece.equalsIgnoreCase("p")){
+      System.out.println("DEBUG: Piece is a pawn");
       int squareFile = (square.charAt(0) - 'a' + 1) - 1;
       int squareRank = (square.charAt(1) - '0') - 1;
       System.out.println("DEBUG: Translated file " + square.charAt(0) + " to integer " + squareFile);
@@ -247,33 +263,26 @@ public class ChessGameHandler {
       int fileLeft = squareFile - 1;
       int fileRight = squareFile + 1;
 
-      if(rankUp > 7) {
-        rankUp = 7;
-      }
-      if(rankDown < 0) {
-        rankDown = 0;
-      }
-      if(fileLeft < 0) {
-        fileRight = 0;
-      }
-      if(fileRight > 7) {
-        fileRight = 7;
-      }
-
       System.out.println("DEBUG: Squares to modify are rank " + rankUp + " file " + fileRight + " and rank " + rankUp + " file " + fileLeft);
 
-      if (Character.isLowerCase(piece.charAt(0))) {
-        position[rankUp][fileRight] = position[rankUp][fileRight].replace('-', '[');
-        position[rankUp][fileRight] = position[rankUp][fileRight].replace(']', '%');
-
-        position[rankUp][fileLeft] = position[rankUp][fileLeft].replace('-', '[');
-        position[rankUp][fileLeft] = position[rankUp][fileLeft].replace(']', '%');
-      } else if (Character.isUpperCase(piece.charAt(0))) {
-        position[rankDown][fileRight] = position[rankDown][fileRight].replace('-', ']');
-        position[rankDown][fileRight] = position[rankDown][fileRight].replace('[', '%');
-
-        position[rankDown][fileLeft] = position[rankDown][fileLeft].replace('-', ']');
-        position[rankDown][fileLeft] = position[rankDown][fileLeft].replace('[', '%');
+      if (Character.isLowerCase(piece.charAt(0)) && rankUp < 8) {
+        if (fileRight < 8) {
+          position[rankUp][fileRight] = position[rankUp][fileRight].replace('-', '[');
+          position[rankUp][fileRight] = position[rankUp][fileRight].replace(']', '%');
+        }
+        if (fileLeft > -1) {
+          position[rankUp][fileLeft] = position[rankUp][fileLeft].replace('-', '[');
+          position[rankUp][fileLeft] = position[rankUp][fileLeft].replace(']', '%');
+        }
+      } else if (Character.isUpperCase(piece.charAt(0)) && rankDown > -1) {
+        if (fileRight < 8) {
+          position[rankDown][fileRight] = position[rankDown][fileRight].replace('-', ']');
+          position[rankDown][fileRight] = position[rankDown][fileRight].replace('[', '%');
+        }
+        if (fileLeft > -1) {
+          position[rankDown][fileLeft] = position[rankDown][fileLeft].replace('-', ']');
+          position[rankDown][fileLeft] = position[rankDown][fileLeft].replace('[', '%');
+        }
       }
       return;
     }
@@ -285,8 +294,12 @@ public class ChessGameHandler {
       //Iterates through every rank
       for (int rank = 0; rank < 8; rank++) {
         String checkSquare = file + (rank + 1);
-        //System.out.println("DEBUG: Checking rank " + rank + " combined with file " + file + " resulting in Square " + checkSquare);
+        if (square.equals(checkSquare)) {
+          continue;
+        }
+
         if (isMovePossible(piece, square, checkSquare)) {
+          //Is a king in check?
           if (Character.isLowerCase(piece.charAt(0))) {
             if(position[rank][fileInt].equals("K")) {
               castlingBlackInfo[3] = true;
@@ -300,6 +313,7 @@ public class ChessGameHandler {
             position[rank][fileInt] = position[rank][fileInt].replace('-', ']');
             position[rank][fileInt] = position[rank][fileInt].replace('[', '%');
           }
+          System.out.println("DEBUG: Movement of piece " + piece + " from square " + square + " to checkSquare " + checkSquare + " is possible.");
         }
       }
     }
@@ -314,11 +328,11 @@ public class ChessGameHandler {
     }
 
     // Aktualisiere die Kontrolle basierend auf allen Figuren auf dem Brett
-    for (int rank = 1; rank < 9; rank++) {
+    for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
           String square = Character.toString((char) ('a' + file)) + (rank + 1);
           String piece = position[rank][file];
-          if (piece != null && !piece.equals("-")) {
+          if (piece != null && !emptySquares.contains(piece)) {
             String playerToMove = Character.isLowerCase(piece.charAt(0)) ? "w" : "B";
             simulateCoverage(piece, square);
           }
@@ -376,7 +390,9 @@ public class ChessGameHandler {
 
     //The targetSquare string is separated
     int targetSquareFile = (targetSquare.charAt(0) - 'a' + 1) - 1;
+    //System.out.println("DEBUG: tSF is " + targetSquareFile);
     int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
+    //System.out.println("DEBUG: tSR is " + targetSquareRank);
 
     
     //fileDiff and rankDiff is calculated (Math.abs = "absolute value" (Betrag))
@@ -405,7 +421,6 @@ public class ChessGameHandler {
             if(checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank)) {
               isMovePossible = true;
             }
-            break;
           }
             
           //Is the piece a knight?
@@ -417,7 +432,6 @@ public class ChessGameHandler {
                 isMovePossible = true;
               }
             }
-            break;
           }
             
           //Is the piece a bishop?
@@ -431,7 +445,6 @@ public class ChessGameHandler {
                 }
               }
             }
-            break;
           }
 
           //Is the piece a rook?
@@ -445,7 +458,6 @@ public class ChessGameHandler {
                 }
               }
             }
-            break;
           }
 
           //Is the piece a queen?
@@ -467,13 +479,12 @@ public class ChessGameHandler {
                 }// else {System.out.println("DEBUG: Target square occupied by a same-colored piece.");}
               }
             }
-            break;
           }
 
           //Is the piece a king? Checks aren't implemented yet
           case "k" -> {
             //If there is at least one difference that equals 1, it's a 1 square queen movement
-            if (fileDiff == 1 || rankDiff == 1) {
+            if (fileDiff <= 1 && rankDiff <= 1) {
               //The king is the only piece that doesn't use isEmptyOrOpposed, as that would allow him to move to squares controlled by the enemy
               //If it's a white king, it can only move to "-" and "[" squares
               if (piece.equals("k")) {
@@ -491,24 +502,22 @@ public class ChessGameHandler {
                 }
               }
             }
-            break;
           }
 
           //Is the move castling?
 
 
           //If the piece isn't  recognized, the move is obviously not legal
-          default -> {
+          default ->
             System.err.println("DEBUG: The piece ID has not been recognized.");
-          }
         }
       }// else {System.err.println("DEBUG: One of the squares doesn't exist.");}
     }// else {System.err.println("DEBUG: Wrong player to move");}
 
-    //If the piece is being moved to the same square it starts from, the move is declared as illegal last-minute
+    //The move is declared as illegal last-minute if startSquare and targetSquare are equal
     if (startSquare.equals(targetSquare)) {
+      System.err.println("DEBUG: targetSquare and startSquare are equal: piece " + piece + " startSquare " + startSquare + " targetSquare " + targetSquare);
       isMovePossible = false;
-      //System.err.println("DEBUG: targetSquare and startSquare are equal.");
     }
 
     //The boolean is returned
@@ -565,13 +574,14 @@ public class ChessGameHandler {
     while(currentFile != targetSquareFile) {
       //If one of the squares isn't empty, the path is blocked and false is returned
       if (!emptySquares.contains(position[currentRank][currentFile])) {
-        System.err.println("DEBUG: Diagonal is not clear.");
+        //System.err.println("DEBUG: Diagonal is not clear.");
         return false;
       }
       
       //If that's not the case, the loop moves on to the next square on the path
       currentFile += fileDirection;
       currentRank += rankDirection;
+      System.out.println("DEBUG: currentFile is " + currentFile + ", currentRank is " + currentRank);
     }
     
     //If the loop hasn't triggered the return false statement, every square on the path is empty and true is returned
@@ -589,7 +599,7 @@ public class ChessGameHandler {
 
       while (currentRank != targetSquareRank) {
         if (!emptySquares.contains(position[currentRank][startSquareFile])) {
-          System.err.println("DEBUG: Vertical straight is not clear.");
+          //System.err.println("DEBUG: Vertical straight is not clear.");
           return false;
         }
 
@@ -604,7 +614,7 @@ public class ChessGameHandler {
       
       while (currentFile != targetSquareFile) {
         if (!emptySquares.contains(position[targetSquareRank][currentFile])) {
-          System.err.println("DEBUG: Horizontal straight is not clear.");
+          //System.err.println("DEBUG: Horizontal straight is not clear.");
           return false;
         }
 
