@@ -1,0 +1,26 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <JavaCodeStyleSettings>
+      <option name="JD_ADD_BLANK_AFTER_RETURN" value="true" />
+    </JavaCodeStyleSettings>
+    <codeStyleSettings language="JAVA">
+      <option name="SPACE_BEFORE_ARRAY_INITIALIZER_LBRACE" value="true" />
+      <arrangement>
+        <groups>
+          <group>
+            <type>GETTERS_AND_SETTERS</type>
+            <order>KEEP</order>
+          </group>
+          <group>
+            <type>OVERRIDDEN_METHODS</type>
+            <order>KEEP</order>
+          </group>
+          <group>
+            <type>DEPENDENT_METHODS</type>
+            <order>BREADTH_FIRST</order>
+          </group>
+        </groups>
+      </arrangement>
+    </codeStyleSettings>
+  </code_scheme>
+</component>
