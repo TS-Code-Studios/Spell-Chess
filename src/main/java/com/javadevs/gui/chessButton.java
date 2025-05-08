@@ -25,11 +25,13 @@ public class chessButton extends JButton
         //2D array position[][] from ChessGameHandler.java has format position[y][x]
     }
     
-    public static void convertPosition(String pos)
+    public static void convertPosition(String pos)                  //CONVERTS POSITION TO NUMERIC VALUE FOR LATER COLOR CALCULATION
     {
         intX = pos.charAt(0) - 'a'; 	        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
         intY = Character.getNumericValue(pos.charAt(1)) - 1; 		// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
     }
+
+
 
     public static void setSquareColor() 
     {
@@ -46,5 +48,10 @@ public class chessButton extends JButton
         {
             color = "white";
         }
+    }
+
+    public static void loadSquareColor(String colorSet)
+    {
+        setBackground()
     }
 }
