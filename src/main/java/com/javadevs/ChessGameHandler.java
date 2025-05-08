@@ -25,14 +25,14 @@ public class ChessGameHandler {
     private void newDefaultPosition() {
         //position array is filled with the default chess position (Uppercase = black pieces, lowercase = white pieces, board is inverted to make the first rank row 0)
         position = new String[][] {
-                {"r", "n", "b", "q", "k", "b", "n", "r"},
-                {"p", "p", "p", "p", "p", "p", "p", "p"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"P", "P", "P", "P", "P", "P", "P", "P"},
-                {"R", "N", "B", "Q", "K", "B", "N", "R"}
+                {"r-", "n-", "b-", "q-", "k-", "b-", "n-", "r-"},
+                {"p-", "p-", "p-", "p-", "p-", "p-", "p-", "p-"},
+                {"--", "--", "--", "--", "--", "--", "--", "--"},
+                {"--", "--", "--", "--", "--", "--", "--", "--"},
+                {"--", "--", "--", "--", "--", "--", "--", "--"},
+                {"--", "--", "--", "--", "--", "--", "--", "--"},
+                {"P-", "P-", "P-", "P-", "P-", "P-", "P-", "P-"},
+                {"R-", "N-", "B-", "Q-", "K-", "B-", "N-", "R-"}
         };
 
     /*
@@ -51,7 +51,7 @@ public class ChessGameHandler {
         // Setze alle Felder auf nicht kontrolliert zurück
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                position[rank][file] = position[rank][file].replace('[', '-').replace(']', '-').replace('%', '-');
+                position[rank][file] = position[rank][file].charAt[0] + "-";
             }
         }
 
@@ -60,7 +60,7 @@ public class ChessGameHandler {
             for (int file = 0; file < 8; file++) {
                 String square = Character.toString((char) ('a' + file)) + (rank + 1);
                 String piece = position[rank][file];
-                if (piece != null && !emptySquares.contains(piece)) {
+                if (piece != null && !piece.charAt(0).equals("-")) {
                     String playerToMove = Character.isLowerCase(piece.charAt(0)) ? "w" : "B";
                     simulateCoverage(piece, square);
                 }
@@ -72,11 +72,11 @@ public class ChessGameHandler {
     //This needs to be run BEFORE the player to move is changed or before the castling availability is updated!
     private void simulateCoverage(String piece, String square) {
         System.out.println("DEBUG: Piece is " + piece);
-        if (emptySquares.contains(piece)) {
+        if (piece.charAt(0).equals("-")) {
             return;
         }
         //Pawn squares are controlled differently
-        if (piece.equalsIgnoreCase("p")) {
+        if (piece.charAt(0).equalsIgnoreCase("p")) {
             System.out.println("DEBUG: Piece is a pawn");
             int squareFile = (square.charAt(0) - 'a' + 1) - 1;
             int squareRank = (square.charAt(1) - '0') - 1;
@@ -92,21 +92,21 @@ public class ChessGameHandler {
 
             if (Character.isLowerCase(piece.charAt(0)) && rankUp < 8) {
                 if (fileRight < 8) {
-                    position[rankUp][fileRight] = position[rankUp][fileRight].replace('-', '[');
-                    position[rankUp][fileRight] = position[rankUp][fileRight].replace(']', '%');
+                    position[rankUp][fileRight] = position[rankUp][fileRight]position[rankUp][fileRight].charAt(1).replace('-', '[');
+                    position[rankUp][fileRight] = position[rankUp][fileRight].charAt(1).replace(']', '%');
                 }
                 if (fileLeft > -1) {
-                    position[rankUp][fileLeft] = position[rankUp][fileLeft].replace('-', '[');
-                    position[rankUp][fileLeft] = position[rankUp][fileLeft].replace(']', '%');
+                    position[rankUp][fileLeft] = position[rankUp][fileLeft].charAt(1).replace('-', '[');
+                    position[rankUp][fileLeft] = position[rankUp][fileLeft].charAt(1).replace(']', '%');
                 }
             } else if (Character.isUpperCase(piece.charAt(0)) && rankDown > -1) {
                 if (fileRight < 8) {
-                    position[rankDown][fileRight] = position[rankDown][fileRight].replace('-', ']');
-                    position[rankDown][fileRight] = position[rankDown][fileRight].replace('[', '%');
+                    position[rankDown][fileRight] = position[rankDown][fileRight].charAt(1).replace('-', ']');
+                    position[rankDown][fileRight] = position[rankDown][fileRight].charAt(1).replace('[', '%');
                 }
                 if (fileLeft > -1) {
-                    position[rankDown][fileLeft] = position[rankDown][fileLeft].replace('-', ']');
-                    position[rankDown][fileLeft] = position[rankDown][fileLeft].replace('[', '%');
+                    position[rankDown][fileLeft] = position[rankDown][fileLeft].charAt(1).replace('-', ']');
+                    position[rankDown][fileLeft] = position[rankDown][fileLeft].charAt(1).replace('[', '%');
                 }
             }
             return;
@@ -129,14 +129,14 @@ public class ChessGameHandler {
                         if (position[rank][fileInt].equals("K")) {
                             castlingBlackInfo[3] = true;
                         }
-                        position[rank][fileInt] = position[rank][fileInt].replace('-', '[');
-                        position[rank][fileInt] = position[rank][fileInt].replace(']', '%');
+                        position[rank][fileInt] = position[rank][fileInt].charAt(1).replace('-', '[');
+                        position[rank][fileInt] = position[rank][fileInt].charAt(1).replace(']', '%');
                     } else {
                         if (position[rank][fileInt].equals("k")) {
                             castlingWhiteInfo[3] = true;
                         }
-                        position[rank][fileInt] = position[rank][fileInt].replace('-', ']');
-                        position[rank][fileInt] = position[rank][fileInt].replace('[', '%');
+                        position[rank][fileInt] = position[rank][fileInt].charAt(1).replace('-', ']');
+                        position[rank][fileInt] = position[rank][fileInt].charAt(1).replace('[', '%');
                     }
                     System.out.println("DEBUG: Movement of piece " + piece + " from square " + square + " to checkSquare " + checkSquare + " is possible.");
                 }
@@ -264,17 +264,17 @@ public class ChessGameHandler {
                         if (fileDiff <= 1 && rankDiff <= 1) {
                             //The king is the only piece that doesn't use isEmptyOrOpposed, as that would allow him to move to squares controlled by the enemy
                             //If it's a white king, it can only move to "-" and "[" squares
-                            if (piece.equals("k")) {
+                            if (piece.charAt(0).equals("k")) {
                                 if (position[targetSquareRank][targetSquareFile].equals("-")
-                                        || position[targetSquareRank][targetSquareFile].equals("[")
-                                        || !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile])) {
+                                        || position[targetSquareRank][targetSquareFile].charAt(1).equals("[")
+                                        || !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile].charAt(0)))) {
                                     isMovePossible = true;
                                 }
                                 //If it's a black king, it can only move to "-" and "]" squares
-                            } else if (piece.equals("K")) {
+                            } else if (piece.charAt(0).equals("K")) {
                                 if (position[targetSquareRank][targetSquareFile].equals("-")
-                                        || position[targetSquareRank][targetSquareFile].equals("]")
-                                        || !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile])) {
+                                        || position[targetSquareRank][targetSquareFile].charAt(1).equals("]")
+                                        || !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile].charAt(0))) {
                                     isMovePossible = true;
                                 }
                             }
@@ -657,7 +657,7 @@ public class ChessGameHandler {
 
         for (int i = 7; i > -1; i--) {
             for (int n = 0; n < 8; n++) {
-                positionString.append(position[i][n]);
+                positionString.append(position[i][n].charAt(1));
             }
             positionString.append("\n");
         }
