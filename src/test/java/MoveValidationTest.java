@@ -5,6 +5,6 @@ public class MoveValidationTest {
     @Test
     public void coverTest() {
         ChessGameHandler testGame = new ChessGameHandler();
-        System.out.println(testGame.isMovePossible("p", "d2", "d4"));
+        System.out.println(testGame.isMovePossible("p", "d2", "d4", true));
     }
 }
