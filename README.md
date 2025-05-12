@@ -49,7 +49,7 @@ Cursive things are already done.
 
 # Branches
 - **master**: The default branch only containing fully developed code.
-- **vanilla-chess-development**: Branch for Theodor and Aaron to work on vanilla chess.
+- **vanilla-chess-development**: Branch for Theodor to work on vanilla chess.
 
 
 
@@ -81,7 +81,7 @@ example: buttonh2
 
 - HINT: the position[][] array uses format[y][x], so in constructor, the args from chessButton(X, Y), are converted to Y, X. 
 
-example: we call chessButton("h","2") to create the button for fiel h2. During call, the name is generated ("buttonh2"), and the posX and posY attributes are set to the different one. (posY contains the function argument X etc.). This is done so we can later call the array using position[posX][posY]
+example: we call chessButton("h","2") to create the button for field h2. During call, the name is generated ("buttonh2"), and the posX and posY attributes are set to the different one. (posY contains the function argument X etc.). This is done so we can later call the array using position[posX][posY]
 
 ChessBoardGUI.java (based on JFrame)
 - contains the Board Panel as well as other UI elements, such as quit or emoji buttons

@@ -3,7 +3,7 @@ package com.javadevs.gui;
 //Author: @simonkdev
 //Version: 17/2/2025
 //ask for more information if needed
-
+import com.javadevsChessGameHandler;
 import javax.swing.JButton;
 
 public class chessButton extends JButton

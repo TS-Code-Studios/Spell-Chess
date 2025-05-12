@@ -9,14 +9,14 @@ import com.javadevs.ChessGameHandler;
 
 import javax.swing;
 
-public class Chessboard extends JPanel
+public class ChessBoard extends JPanel
 {
     List<chessButton> buttons;
     int count;
     int countRow;
     int buttonSize;
 
-    public Chessboard()
+    public void chessBoard()
     {
         setLayout(new GridLayout(8, 8));
         int panelWidth = 400;  // Width of the panel
