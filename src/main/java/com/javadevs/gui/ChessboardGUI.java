@@ -15,10 +15,19 @@ import com.javadevs.ChessGameHandler;
 
 public class ChessboardGUI extends JFrame;
 {
+  ChessBoard board = new ChessBoard();
+  ChessGameHandler gameHandler = new ChessGameHandler();
+
   @SuppressWarnings("unused")
 
   public ChessboardGUI () 
   {
+    board.ChessBoard();
+    add(board);
+    setTitle("Chessboard");
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setSize(800, 800);
+    setResizable(false);
     setVisible(true);
   }
     

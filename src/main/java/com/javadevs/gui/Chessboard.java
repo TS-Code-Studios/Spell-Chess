@@ -16,7 +16,7 @@ public class ChessBoard extends JPanel
     int countRow;
     int buttonSize;
 
-    public void chessBoard()
+    public void ChessBoard()
     {
         setLayout(new GridLayout(8, 8));
         int panelWidth = 400;  // Width of the panel
