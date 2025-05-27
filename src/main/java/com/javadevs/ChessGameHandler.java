@@ -11,13 +11,29 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ChessGameHandler {
-    private static String playerToMove = "w";
-    private final List<String> emptySquares = Arrays.asList("-", "[", "]", "%");
-    // All attributes are private for the sake of encapsulation
-    private String[][] position;
-    private String[][] coverageMap;
+    // Indices of the information stored in the castlingInfo arrays
+    final int KING_MOVED_INDEX = 0;
+    final int A_ROOK_MOVED_INDEX = 1;
+    final int H_ROOK_MOVED_INDEX = 2;
 
-    private int[] positionMeta;
+    final int IN_CHECK_INDEX = 3;
+
+    final int KINGSIDE_INDEX = 4;
+    final int QUEENSIDE_INDEX = 5;
+
+    final int HAS_CASTLED_INDEX = 6;
+
+    final char EMPTY_SQUARE_CHAR = '-';
+    final char WHITE_COVERAGE_CHAR = '[';
+    final char BLACK_COVERAGE_CHAR = ']';
+    final char DOUBLE_COVERAGE_CHAR = '%';
+
+    private static char playerToMove = 'w';
+    private final List<Character> EMPTY_SQUARES = Arrays.asList('-', '[', ']', '%');
+    // All attributes are private for the sake of encapsulation
+    private char[][] position;
+    private char[][] coverageMap;
+
     private boolean[] castlingWhiteInfo, castlingBlackInfo;
 
 
@@ -34,7 +50,7 @@ public class ChessGameHandler {
             while (true) {
                 //The current position is printed out in the terminal
                 System.out.println("Current position:");
-                System.out.println(testGame.stringArrayToString(testGame.position));
+                System.out.println(testGame.charArrayToString(testGame.position));
 
                 // System.out.println("Coverage Map:");
                 // System.out.println(testGame.stringArrayToString(testGame.coverageMap));
@@ -47,10 +63,14 @@ public class ChessGameHandler {
                     moveMade = input.nextLine();
 
                     System.out.println("DEBUG: Input read as " + moveMade);
+
                     //The components of the move (piece, startSquare, targetSquare) are stored in a string array.
                     String[] moveComponents = moveMade.split(" ");
+                    final int PIECE_INDEX = 0;
+                    final int START_SQUARE_INDEX = 1;
+                    final int TARGET_SQUARE_INDEX = 2;
 
-                    if (moveComponents[0].equals("exit")) {
+                    if (moveComponents[PIECE_INDEX].equals("exit")) {
                         System.exit(0);
                     }
 
@@ -59,27 +79,27 @@ public class ChessGameHandler {
                     }
 
                     //If the move entered is possible
-                    if (testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], true)) {
+                    if (testGame.isMovePossible(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX], true)) {
                         //Make the move and update castling availability, then break the while(true) loop
                         //System.out.println("DEBUG: Move is being made...");
-                        testGame.makeMove(moveComponents[0], moveComponents[1], moveComponents[2]);
+                        testGame.makeMove(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX]);
 
                         //System.out.println("DEBUG: Move made successfully.");
                         break;
 
                         //If it is illegal
-                    } else if (!testGame.isMovePossible(moveComponents[0], moveComponents[1], moveComponents[2], true)) {
+                    } else if (!testGame.isMovePossible(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX], true)) {
                         System.out.println("Illegal move!");
 
                         System.out.println("Current position:");
-                        System.out.println(testGame.stringArrayToString(testGame.position));
+                        System.out.println(testGame.charArrayToString(testGame.position));
 
                         System.out.println("Try again:");
                     }
                 }
 
                 //The player is switched
-                playerToMove = Character.isLowerCase(playerToMove.charAt(0)) ? "B" : "w";
+                playerToMove = Character.isLowerCase(playerToMove) ? 'B' : 'w';
             }
         }
     }
@@ -87,38 +107,31 @@ public class ChessGameHandler {
     //Every array is assigned the values of the default chess position
     private void newDefaultPosition() {
         //position array is filled with the default chess position (Uppercase = black pieces, lowercase = white pieces, board is inverted to make the first rank row 0)
-        position = new String[][] {
-                {"r", "n", "b", "q", "k", "b", "n", "r"},
-                {"p", "p", "p", "p", "p", "p", "p", "p"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"P", "P", "P", "P", "P", "P", "P", "P"},
-                {"R", "N", "B", "Q", "K", "B", "N", "R"}
+        position = new char[][] {
+                {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+                {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+                {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
         };
 
         // coverageMap array is filled with dashes ("-" = uncovered, "[" = covered by white, "]" = covered by black, "%" = covered by both sides)
-        coverageMap = new String[][] {
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"},
-                {"-", "-", "-", "-", "-", "-", "-", "-"}
+        coverageMap = new char[][] {
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'},
+                {'-', '-', '-', '-', '-', '-', '-', '-'}
         };
 
-        /*
-        positionMeta array is filled with the default chess position's meta.
-        1 = true, 0 = false
-        Order: white O-O, white O-O-O, black O-O, black O-O-O, half moves, check
-        */
-        positionMeta = new int[] {0, 0, 0, 0, 0, 0};
-        //Has king moved, has rook a moved, has rook h moved, is king in check
-        castlingWhiteInfo = new boolean[]{false, false, false, false};
-        castlingBlackInfo = new boolean[]{false, false, false, false};
+        castlingWhiteInfo = new boolean[] {false, false, false, false, false, false};
+        castlingBlackInfo = new boolean[] {false, false, false, false, false, false};
 
         updateCoveredSquares();
     }
@@ -127,7 +140,7 @@ public class ChessGameHandler {
         // Reset the coverage map
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                coverageMap[rank][file] = "-";
+                coverageMap[rank][file] = '-';
             }
         }
 
@@ -135,10 +148,10 @@ public class ChessGameHandler {
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
                 String square = Character.toString((char) ('a' + file)) + (rank + 1);
-                String piece = position[rank][file];
+                char piece = position[rank][file];
 
                 // If there is a piece on a square, check where it can move
-                if (piece != null && piece.charAt(0) != '-') {
+                if (piece != EMPTY_SQUARE_CHAR) {
                     simulateCoverage(piece, square);
                 }
             }
@@ -150,14 +163,14 @@ public class ChessGameHandler {
 
     //Method for checking all the squares a piece can cover from a square
     //This needs to be run BEFORE the player to move is changed or before the castling availability is updated!
-    private void simulateCoverage(String piece, String square) {
+    private void simulateCoverage(char piece, String square) {
         // System.out.println("DEBUG: Piece is " + piece);
-        if (piece.equals("-")) {
+        if (piece == EMPTY_SQUARE_CHAR) {
             return;
         } // Fail save
 
         //Pawn squares are controlled differently
-        if (Character.toLowerCase(piece.charAt(0)) == 'p') {
+        if (Character.toLowerCase(piece) == 'p') {
             // System.out.println("DEBUG: Piece is a pawn");
             int squareFile = (square.charAt(0) - 'a' + 1) - 1;
             int squareRank = (square.charAt(1) - '0') - 1;
@@ -171,17 +184,18 @@ public class ChessGameHandler {
 
             // System.out.println("DEBUG: Squares to modify are rank " + rankUp + " file " + fileRight + " and rank " + rankUp + " file " + fileLeft);
             // If the pawn is white
-            if (Character.isLowerCase(piece.charAt(0)) && rankUp < 8) {
+            if (Character.isLowerCase(piece) && rankUp < 8) {
                 // These four outer if clauses are there to ensure the program isn't trying to access any squares outside the 8×8 board
-                if (fileRight < 8) {coverageMap[rankUp][fileRight] = coverageMap[rankUp][fileRight].replace('-', '[').replace(']', '%');}
-                if (fileLeft > -1) {coverageMap[rankUp][fileLeft] = coverageMap[rankUp][fileLeft].replace('-','[').replace(']','%');}
+                if (fileRight < 8) {coverageMap[rankUp][fileRight] = replaceChar(coverageMap[rankUp][fileRight], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR); replaceChar(coverageMap[rankUp][fileRight], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
+                if (fileLeft > -1) {coverageMap[rankUp][fileLeft] = replaceChar(coverageMap[rankUp][fileLeft], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR); replaceChar(coverageMap[rankUp][fileLeft], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
             }
 
             // If the pawn is black
-            else if (Character.isUpperCase(piece.charAt(0)) && rankDown > -1) {
-                if (fileRight < 8) {coverageMap[rankDown][fileRight] = coverageMap[rankDown][fileRight].replace('-', ']').replace('[', '%');}
-                if (fileLeft > -1) {coverageMap[rankDown][fileLeft] = coverageMap[rankDown][fileLeft].replace('-', ']').replace('[', '%');}
+            else if (Character.isUpperCase(piece) && rankDown > -1) {
+                if (fileRight < 8) {coverageMap[rankDown][fileRight] = replaceChar(coverageMap[rankDown][fileRight], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR); replaceChar(coverageMap[rankDown][fileRight], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
+                if (fileLeft > -1) {coverageMap[rankDown][fileLeft] = replaceChar(coverageMap[rankDown][fileLeft], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR); replaceChar(coverageMap[rankDown][fileLeft], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
             }
+
             return;
         }
 
@@ -199,25 +213,27 @@ public class ChessGameHandler {
 
 
                 // If the move is possible, the square is set to covered
-                if (isMovePossible(piece, square, checkSquare, false)) {
+                if (isMovePossible(Character.toString(piece), square, checkSquare, false)) {
                     // If the piece that we're simulating is white
-                    if (Character.isLowerCase(piece.charAt(0))) {
-                        coverageMap[rank][fileInt] = coverageMap[rank][fileInt].replace('-', '[').replace(']', '%');
+                    if (Character.isLowerCase(piece)) {
+                        coverageMap[rank][fileInt] = replaceChar(coverageMap[rank][fileInt], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR);
+                        coverageMap[rank][fileInt] = replaceChar(coverageMap[rank][fileInt], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);
 
                         // If there is a black king on that square, black is in check
-                        if (position[rank][fileInt].equals("K") && (coverageMap[rank][fileInt].equals("[") || coverageMap[rank][fileInt].equals("%"))) {
-                            castlingBlackInfo[3] = true;
+                        if (position[rank][fileInt] == 'K' && (coverageMap[rank][fileInt] == WHITE_COVERAGE_CHAR || coverageMap[rank][fileInt] == DOUBLE_COVERAGE_CHAR)) {
+                            castlingBlackInfo[IN_CHECK_INDEX] = true;
                             System.out.println("Black is in check!");
                         }
                     }
 
                     // If the piece that we're simulating is black
                     else {
-                        coverageMap[rank][fileInt] = coverageMap[rank][fileInt].replace('-', ']').replace('[', '%');
+                        coverageMap[rank][fileInt] = replaceChar(coverageMap[rank][fileInt], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR);
+                        coverageMap[rank][fileInt] = replaceChar(coverageMap[rank][fileInt], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);
 
                         // If there is a white king on that square, white is in check
-                        if (position[rank][fileInt].equals("k") && (coverageMap[rank][fileInt].equals("]") || coverageMap[rank][fileInt].equals("%"))) {
-                            castlingWhiteInfo[3] = true;
+                        if (position[rank][fileInt] == 'k' && (coverageMap[rank][fileInt] == WHITE_COVERAGE_CHAR || coverageMap[rank][fileInt] == DOUBLE_COVERAGE_CHAR)) {
+                            castlingWhiteInfo[IN_CHECK_INDEX] = true;
                             System.out.println("White is in check!");
                         }
                     }
@@ -249,7 +265,7 @@ public class ChessGameHandler {
 
 
         // In case the move is not simulated, this rules out the move if the piece on the target square is of the same color
-        if (notSimulated && isPieceSameColor(piece, position[targetSquareRank][targetSquareFile]) && !position[targetSquareRank][targetSquareFile].equals("-")) {
+        if (notSimulated && isPieceSameColor(piece.charAt(0), position[targetSquareRank][targetSquareFile]) && position[targetSquareRank][targetSquareFile] != EMPTY_SQUARE_CHAR) {
             System.err.println("DEBUG: Target square occupied by a same-colored piece.");
             return false;
         }
@@ -260,7 +276,7 @@ public class ChessGameHandler {
         int rankDiff = Math.abs(startSquareRank - targetSquareRank);
 
         //Checks if it's the right player to move, since capitalization = color
-        if (!isPieceSameColor(piece, playerToMove) && notSimulated) {
+        if (!isPieceSameColor(piece.charAt(0), playerToMove) && notSimulated) {
             System.err.println("DEBUG: Wrong player to move");
             return false;
         }
@@ -272,7 +288,7 @@ public class ChessGameHandler {
         }
 
         //Does such a piece even exist on the start square?
-        if (piece.charAt(0) != position[startSquareRank][startSquareFile].charAt(0)) {
+        if (piece.charAt(0) != position[startSquareRank][startSquareFile]) {
             return false;
         }
 
@@ -334,7 +350,7 @@ public class ChessGameHandler {
                 if (fileDiff <= 1 && rankDiff <= 1) {
                     //If it's a white king, it can only move to "-" and "[" squares
                     if (piece.equals("k")) {
-                        if (coverageMap[targetSquareRank][targetSquareFile].equals("-") || coverageMap[targetSquareRank][targetSquareFile].equals("["))
+                        if (coverageMap[targetSquareRank][targetSquareFile] == EMPTY_SQUARE_CHAR || coverageMap[targetSquareRank][targetSquareFile] == WHITE_COVERAGE_CHAR)
                         {
                             isMovePossible = true;
                         }
@@ -342,7 +358,7 @@ public class ChessGameHandler {
 
                     //If it's a black king, it can only move to "-" and "]" squares
                     else if (piece.equals("K")) {
-                        if (coverageMap[targetSquareRank][targetSquareFile].equals("-") || coverageMap[targetSquareRank][targetSquareFile].equals("]"))
+                        if (coverageMap[targetSquareRank][targetSquareFile] == EMPTY_SQUARE_CHAR || coverageMap[targetSquareRank][targetSquareFile] == BLACK_COVERAGE_CHAR)
                         {
                             isMovePossible = true;
                         }
@@ -366,7 +382,8 @@ public class ChessGameHandler {
             // Backs up the old position, position meta, coverage map and castling info arrays
             // We need to do deep copies or else there will be reference issues
 
-            String[][] previousPositionBuffer = new String[position.length][];
+            char[][] previousPositionBuffer = new char[position.length][];
+
             for (int i = 0; i < position.length; i++) {
                 previousPositionBuffer[i] = position[i].clone();
             }
@@ -374,9 +391,7 @@ public class ChessGameHandler {
             // System.out.println("Previous position buffered as:");
             // System.out.println(stringArrayToString(previousPositionBuffer));
 
-            int[] previousPositionMetaBuffer = positionMeta.clone();
-
-            String[][] previousCoverageMapBuffer = new String[coverageMap.length][];
+            char[][] previousCoverageMapBuffer = new char[coverageMap.length][];
             for (int i = 0; i < coverageMap.length; i++) {
                 previousCoverageMapBuffer[i] = coverageMap[i].clone();
             }
@@ -388,25 +403,23 @@ public class ChessGameHandler {
             makeMove(piece, startSquare, targetSquare);
 
             // Checks for checks
-            if (playerToMove.equals("w") && castlingWhiteInfo[3]) {
+            if (playerToMove == 'w' && castlingWhiteInfo[IN_CHECK_INDEX]) {
                 isMovePossible = false;
                 System.err.println("White would be in check after this move!");
 
-            } else if (playerToMove.equals("B") && castlingBlackInfo[3]) {
+            } else if (playerToMove == 'B' && castlingBlackInfo[IN_CHECK_INDEX]) {
                 isMovePossible = false;
                 System.err.println("Black would be in check after this move!");
             }
 
             // All the arrays are reverted so the move was basically never made
             System.out.println("Previous position buffered as, reverting:");
-            System.out.println(stringArrayToString(previousPositionBuffer));
+            System.out.println(charArrayToString(previousPositionBuffer));
 
             position = previousPositionBuffer;
 
             System.out.println("Position reverted to:");
-            System.out.println(stringArrayToString(position));
-
-            positionMeta = previousPositionMetaBuffer;
+            System.out.println(charArrayToString(position));
 
             coverageMap = previousCoverageMapBuffer;
 
@@ -419,29 +432,29 @@ public class ChessGameHandler {
         return isMovePossible;
     }
 
-    //Method for checking every way of castling
+    // Method for checking every way of castling
     private boolean canCastleHere(String castleNotation) {
-        if ("o-o".equals(castleNotation) && positionMeta[0] == 1) {
+        if ("o-o".equals(castleNotation) && castlingWhiteInfo[KINGSIDE_INDEX]) {
             return true;
-        } else if ("o-o-o".equals(castleNotation) && positionMeta[1] == 1) {
+        } else if ("o-o-o".equals(castleNotation) && castlingWhiteInfo[QUEENSIDE_INDEX]) {
             return true;
-        } else if ("O-O".equals(castleNotation) && positionMeta[2] == 1) {
+        } else if ("O-O".equals(castleNotation) && castlingBlackInfo[KINGSIDE_INDEX]) {
             return true;
-        } else return "O-O-O".equals(castleNotation) && positionMeta[3] == 1;
+        } else return "O-O-O".equals(castleNotation) && castlingBlackInfo[QUEENSIDE_INDEX];
     }
 
-    //Checks whether two pieces are of the same color
-    public boolean isPieceSameColor(String piece1, String piece2) {
-        if (piece2.equals("w") || piece2.equals("B")) {
+    // Checks whether two pieces are of the same color
+    public boolean isPieceSameColor(char piece1, char piece2) {
+        if (piece2 == 'w' || piece2 == 'B') {
             // piece2 is the playerToMove
-            if (piece2.equals("w")) {
-                return Character.isLowerCase(piece1.charAt(0)); // White's pieces are lowercase
+            if (piece2 == 'w') {
+                return Character.isLowerCase(piece1); // White's pieces are lowercase
             } else {
-                return Character.isUpperCase(piece1.charAt(0)); // Black's pieces are uppercase
+                return Character.isUpperCase(piece1); // Black's pieces are uppercase
             }
         } else {
             // piece2 is another piece
-            return (Character.isUpperCase(piece1.charAt(0)) == Character.isUpperCase(piece2.charAt(0)));
+            return (Character.isUpperCase(piece1) == Character.isUpperCase(piece2));
         }
     }
 
@@ -454,7 +467,7 @@ public class ChessGameHandler {
         int startingRank = "P".equals(piece) ? 6 : 1;  // Adjusted starting rank for white and black pawns
 
         // Is the pawn staying on its file? Is the target square empty?
-        if (targetSquareFile == startSquareFile && emptySquares.contains(position[targetSquareRank][targetSquareFile])) {
+        if (targetSquareFile == startSquareFile && EMPTY_SQUARES.contains(position[targetSquareRank][targetSquareFile])) {
 
             // Is it moving 1 square forward?
             if (startSquareRank + moveDirection == targetSquareRank) {
@@ -464,7 +477,7 @@ public class ChessGameHandler {
             else if (startSquareRank == startingRank && startSquareRank + 2 * moveDirection == targetSquareRank) {
                 // Check if the square in between is also empty
                 int intermediateRank = startSquareRank + moveDirection;
-                if (emptySquares.contains(position[intermediateRank][targetSquareFile])) {
+                if (EMPTY_SQUARES.contains(position[intermediateRank][targetSquareFile])) {
                     isPawnMovePossible = true;
                 } else {
                     System.err.println("DEBUG: Square in between is not empty.");
@@ -474,7 +487,7 @@ public class ChessGameHandler {
         // Is the pawn capturing a piece? (^ = XOR)
         else if ((startSquareFile - 1 == targetSquareFile ^ startSquareFile + 1 == targetSquareFile)
                 && startSquareRank + moveDirection == targetSquareRank
-                && !isPieceSameColor(piece, position[targetSquareRank][targetSquareFile])) {
+                && !isPieceSameColor(piece.charAt(0), position[targetSquareRank][targetSquareFile])) {
             isPawnMovePossible = true;
         }
 
@@ -494,7 +507,7 @@ public class ChessGameHandler {
         //Each square along the bishop's path is checked
         while (currentFile != targetSquareFile) {
             //If one of the squares isn't empty, the path is blocked and false is returned
-            if (!emptySquares.contains(position[currentRank][currentFile])) {
+            if (!EMPTY_SQUARES.contains(position[currentRank][currentFile])) {
                 //System.err.println("DEBUG: Diagonal is not clear.");
                 return false;
             }
@@ -519,7 +532,7 @@ public class ChessGameHandler {
             int currentRank = startSquareRank + rankDirection;
 
             while (currentRank != targetSquareRank) {
-                if (!emptySquares.contains(position[currentRank][startSquareFile])) {
+                if (!EMPTY_SQUARES.contains(position[currentRank][startSquareFile])) {
                     //System.err.println("DEBUG: Vertical straight is not clear.");
                     return false;
                 }
@@ -534,7 +547,7 @@ public class ChessGameHandler {
             int currentFile = startSquareFile + fileDirection;
 
             while (currentFile != targetSquareFile) {
-                if (!emptySquares.contains(position[targetSquareRank][currentFile])) {
+                if (!EMPTY_SQUARES.contains(position[targetSquareRank][currentFile])) {
                     //System.err.println("DEBUG: Horizontal straight is not clear.");
                     return false;
                 }
@@ -549,39 +562,45 @@ public class ChessGameHandler {
     public void castlingAvailabilityUpdate(@NotNull String piece, String startSquare) {
         //If the player just castled, the availabilities are set to 0 and the method is stopped
         if (piece.equals("o-o") || piece.equals("o-o-o")) {
-            castlingWhiteInfo[0] = true;
-            positionMeta[0] = 0;
-            positionMeta[1] = 0;
+            castlingWhiteInfo[KING_MOVED_INDEX] = true;
+
+            castlingWhiteInfo[KINGSIDE_INDEX] = false;
+            castlingWhiteInfo[QUEENSIDE_INDEX] = false;
+
             return;
-        } else if (piece.equals("O-O") || piece.equals("O-O-O")) {
-            castlingBlackInfo[0] = true;
-            positionMeta[2] = 0;
-            positionMeta[3] = 0;
+        }
+        else if (piece.equals("O-O") || piece.equals("O-O-O")) {
+            castlingBlackInfo[KING_MOVED_INDEX] = true;
+
+            castlingBlackInfo[KINGSIDE_INDEX] = false;
+            castlingBlackInfo[QUEENSIDE_INDEX] = false;
+
             return;
         }
 
         switch (piece) {
             case "k":
-                castlingWhiteInfo[0] = true;
+                castlingWhiteInfo[KING_MOVED_INDEX] = true;
                 break;
 
             case "K":
-                castlingBlackInfo[0] = true;
+                castlingBlackInfo[KING_MOVED_INDEX] = true;
                 break;
 
             case "r":
                 if (startSquare.charAt(0) == 'a') {
-                    castlingWhiteInfo[1] = true;
-                } else if (startSquare.charAt(0) == 'h') {
-                    castlingWhiteInfo[2] = true;
+                    castlingWhiteInfo[A_ROOK_MOVED_INDEX] = true;
+                }
+                else if (startSquare.charAt(0) == 'h') {
+                    castlingWhiteInfo[H_ROOK_MOVED_INDEX] = true;
                 }
                 break;
 
             case "R":
                 if (startSquare.charAt(0) == 'a') {
-                    castlingBlackInfo[1] = true;
+                    castlingBlackInfo[A_ROOK_MOVED_INDEX] = true;
                 } else if (startSquare.charAt(0) == 'h') {
-                    castlingBlackInfo[2] = true;
+                    castlingBlackInfo[H_ROOK_MOVED_INDEX] = true;
                 }
                 break;
 
@@ -590,35 +609,42 @@ public class ChessGameHandler {
         }
         //Now the availabilities are updated
         //Did the white king move?
-        if (!castlingWhiteInfo[0] && !castlingWhiteInfo[3]) {
-            //White castle queenside
-            if (!castlingWhiteInfo[1] &&
-                    (position[0][1].equals("-") || position[0][1].equals("[")) &&
-                    (position[0][2].equals("-") || position[0][2].equals("[")) &&
-                    (position[0][3].equals("-") || position[0][3].equals("["))) {
-                positionMeta[1] = 1;
+        if (!castlingWhiteInfo[KING_MOVED_INDEX] && !castlingWhiteInfo[IN_CHECK_INDEX]) {
+            // White castle kingside: If the a rook hasn't moved, the squares in between are empty and not covered by black, it's allowed
+            if (!castlingWhiteInfo[A_ROOK_MOVED_INDEX] && position[0][1] == EMPTY_SQUARE_CHAR && position[0][2] == EMPTY_SQUARE_CHAR && position[0][3] == EMPTY_SQUARE_CHAR &&
+                    (coverageMap[0][1] == EMPTY_SQUARE_CHAR || coverageMap[0][1] == WHITE_COVERAGE_CHAR) &&
+                    (coverageMap[0][2] == EMPTY_SQUARE_CHAR || coverageMap[0][2] == WHITE_COVERAGE_CHAR) &&
+                    (coverageMap[0][3] == EMPTY_SQUARE_CHAR || coverageMap[0][3] == WHITE_COVERAGE_CHAR)) {
+
+                castlingWhiteInfo[QUEENSIDE_INDEX] = true;
             }
-            //White castle kingside
-            if (!castlingWhiteInfo[2] &&
-                    (position[0][5].equals("-") || position[0][5].equals("[")) &&
-                    (position[0][6].equals("-") || position[0][6].equals("["))) {
-                positionMeta[0] = 1;
+
+            // White castle kingside: If the H rook hasn't moved, the squares in between are empty and not covered by black, it's allowed
+            if (!castlingWhiteInfo[H_ROOK_MOVED_INDEX] && position[0][5] == EMPTY_SQUARE_CHAR && position[0][6] == EMPTY_SQUARE_CHAR &&
+                    (coverageMap[0][5] == EMPTY_SQUARE_CHAR || coverageMap[0][5] == WHITE_COVERAGE_CHAR) &&
+                    (coverageMap[0][6] == EMPTY_SQUARE_CHAR || coverageMap[0][6] == WHITE_COVERAGE_CHAR)) {
+
+                castlingWhiteInfo[KINGSIDE_INDEX] = true;
             }
         }
+
         //Did the black king move?
-        if (!castlingBlackInfo[0] && !castlingBlackInfo[3]) {
-            //Black castle queenside
-            if (!castlingBlackInfo[1] &&
-                    (position[7][1].equals("-") || position[7][1].equals("]")) &&
-                    (position[7][2].equals("-") || position[7][2].equals("]")) &&
-                    (position[7][3].equals("-") || position[7][3].equals("]"))) {
-                positionMeta[3] = 1;
+        if (!castlingBlackInfo[0] && !castlingBlackInfo[IN_CHECK_INDEX]) {
+            // Black castle queenside: If the A rook hasn't moved, the squares in between are empty and not covered by white, it's allowed
+            if (!castlingBlackInfo[A_ROOK_MOVED_INDEX] && position[7][1] == EMPTY_SQUARE_CHAR && position[7][2] == EMPTY_SQUARE_CHAR && position[7][3] == EMPTY_SQUARE_CHAR &&
+                    (coverageMap[7][1] == EMPTY_SQUARE_CHAR || coverageMap[7][1] == BLACK_COVERAGE_CHAR) &&
+                    (coverageMap[7][2] == EMPTY_SQUARE_CHAR || coverageMap[7][2] == BLACK_COVERAGE_CHAR) &&
+                    (coverageMap[7][3] == EMPTY_SQUARE_CHAR || coverageMap[7][3] == BLACK_COVERAGE_CHAR)) {
+
+                castlingBlackInfo[QUEENSIDE_INDEX] = true;
             }
-            //Black castle kingside
-            if (!castlingBlackInfo[2] &&
-                    (position[7][5].equals("-") || position[7][5].equals("]")) &&
-                    (position[7][6].equals("-") || position[7][6].equals("]"))) {
-                positionMeta[2] = 1;
+
+            // Black castle kingside: If the H rook hasn't moved, the squares in between are empty and not covered by white, it's allowed
+            if (!castlingBlackInfo[H_ROOK_MOVED_INDEX] && position[7][5] == EMPTY_SQUARE_CHAR && position[7][6] == EMPTY_SQUARE_CHAR &&
+                    (coverageMap[7][5] == EMPTY_SQUARE_CHAR || coverageMap[7][5] == BLACK_COVERAGE_CHAR) &&
+                    (coverageMap[7][6] == EMPTY_SQUARE_CHAR || coverageMap[7][6] == BLACK_COVERAGE_CHAR)) {
+
+                castlingBlackInfo[KINGSIDE_INDEX] = true;
             }
         }
     }
@@ -629,49 +655,49 @@ public class ChessGameHandler {
             //Is white castling kingside?
             case "o-o" -> {
                 //Former rook and king squares are cleared
-                position[0][4] = "-";
-                position[0][7] = "-";
+                position[0][4] = EMPTY_SQUARE_CHAR;
+                position[0][7] = EMPTY_SQUARE_CHAR;
 
                 //King and rook are moved to their new position
-                position[0][6] = "k";
-                position[0][5] = "r";
+                position[0][6] = 'k';
+                position[0][5] = 'r';
 
                 //Castling is banned for the rest of the game
-                positionMeta[0] = 0;
-                positionMeta[1] = 0;
+                castlingWhiteInfo[HAS_CASTLED_INDEX] = true;
+
                 return;
             }
             //Is white castling queenside?
             case "o-o-o" -> {
-                position[0][4] = "-";
-                position[0][0] = "-";
-                position[0][2] = "k";
-                position[0][3] = "r";
+                position[0][4] = EMPTY_SQUARE_CHAR;
+                position[0][0] = EMPTY_SQUARE_CHAR;
+                position[0][2] = 'k';
+                position[0][3] = 'r';
 
-                positionMeta[0] = 0;
-                positionMeta[1] = 0;
+                castlingWhiteInfo[HAS_CASTLED_INDEX] = true;
+
                 return;
             }
             //Is black castling kingside?
             case "O-O" -> {
-                position[7][4] = "-";
-                position[7][7] = "-";
-                position[7][6] = "K";
-                position[7][5] = "R";
+                position[7][4] = EMPTY_SQUARE_CHAR;
+                position[7][7] = EMPTY_SQUARE_CHAR;
+                position[7][6] = 'K';
+                position[7][5] = 'R';
 
-                positionMeta[2] = 0;
-                positionMeta[3] = 0;
+                castlingBlackInfo[HAS_CASTLED_INDEX] = true;
+
                 return;
             }
             //Is black castling queenside?
             case "O-O-O" -> {
-                position[7][4] = "-";
-                position[7][0] = "-";
-                position[7][2] = "K";
-                position[7][3] = "R";
+                position[7][4] = EMPTY_SQUARE_CHAR;
+                position[7][0] = EMPTY_SQUARE_CHAR;
+                position[7][2] = 'K';
+                position[7][3] = 'R';
 
-                positionMeta[2] = 0;
-                positionMeta[3] = 0;
+                castlingBlackInfo[HAS_CASTLED_INDEX] = true;
+
                 return;
             }
         }
@@ -684,8 +710,8 @@ public class ChessGameHandler {
             int targetSquareFile = ((targetSquare.charAt(0) - 'a' + 1) - 1);
             int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
 
-            position[startSquareRank][startSquareFile] = "-";
-            position[targetSquareRank][targetSquareFile] = piece;
+            position[startSquareRank][startSquareFile] = EMPTY_SQUARE_CHAR;
+            position[targetSquareRank][targetSquareFile] = piece.charAt(0);
 
         } catch (Exception invalidMoveInput) {
             System.err.println("Invalid move input: " + invalidMoveInput);
@@ -705,7 +731,7 @@ public class ChessGameHandler {
 
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
-                if (position[rank][file].equals("-")) {continue;}
+                if (position[rank][file] == EMPTY_SQUARE_CHAR) {continue;}
             }
         }
 
@@ -713,7 +739,7 @@ public class ChessGameHandler {
     }
 
     // Small utility method that can convert any String 2D array into a printable String (including line breaks). Only works for non-jagged 2D arrays.
-    public String stringArrayToString(String @NotNull [][] input) {
+    public String charArrayToString(char @NotNull [][] input) {
         StringBuilder output = new StringBuilder();
 
         for (int i = input[0].length - 1; i > -1; i--) {
@@ -725,13 +751,15 @@ public class ChessGameHandler {
         return output.toString();
     }
 
-    // Getters for all the read-only attributes
-    public String[][] getPosition() {
-        return position;
+    // Small utility method for replacing chars
+    public char replaceChar(char charToChange, char charToReplace, char charToReplaceWith) {
+        if (charToChange == charToReplace) {return charToReplaceWith;}
+        else {return charToChange;}
     }
 
-    public int[] getPositionMeta() {
-        return positionMeta;
+    // Getters for all the read-only attributes
+    public char[][] getPosition() {
+        return position;
     }
 
     public boolean[] getCastlingWhiteInfo() {
@@ -742,11 +770,7 @@ public class ChessGameHandler {
         return castlingBlackInfo;
     }
 
-    public String getPlayerToMove() {
+    public char getPlayerToMove() {
         return playerToMove;
-    }
-
-    public List<String> getEmptySquares() {
-        return emptySquares;
     }
 }
