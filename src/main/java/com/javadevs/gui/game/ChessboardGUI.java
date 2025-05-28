@@ -12,7 +12,9 @@ import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import com.javadevs.ChessGameHandler;
 import com.javadevs.gui.game.ChessBoard;
@@ -37,23 +39,26 @@ public class ChessboardGUI extends JFrame
     bottomBar actionBar = new bottomBar();
     topBar topBar = new topBar();
 
-    Dimension BOTTOM_SPACER = new Dimension(0, 50); // Space between the board and the action bar
-    Dimension TOP_SPACER = new Dimension(0, 50); // Space at the top of the window
+    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 50);
+    Dimension TOP_SPACER_SIZE = new Dimension(0, 50);
 
     setSize(400, 600);
 
     BoxLayout WINDOW_LAYOUT = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
     getContentPane().setLayout(WINDOW_LAYOUT);
-  
-    this.add(topBar);
-    this.add(Box.createRigidArea(TOP_SPACER)); // Add some space at the top of the window
-    this.add(board);
-    this.add(Box.createRigidArea(BOTTOM_SPACER)); // Add some space between the board and the action bar
-    this.add(actionBar);
+
+    // Set content pane background to black (or your image later)
+    getContentPane().setBackground(Color.BLACK);
+
+    // Use invisible, lightweight spacers
+    getContentPane().add(topBar);
+    getContentPane().add(Box.createRigidArea(TOP_SPACER_SIZE));
+    getContentPane().add(board);
+    getContentPane().add(Box.createRigidArea(BOTTOM_SPACER_SIZE));
+    getContentPane().add(actionBar);
+
     setTitle("Chessboard");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-   
-    setBackground(Color.BLACK);
     setResizable(false);
     setVisible(true);
   }

@@ -75,6 +75,7 @@ public class ChessBoard extends JPanel
     target.setSquareColor();
     //target.setLabel(target.posY + target.posX);
     target.setText(target.posY + target.posX);
+    target.setFocusPainted(false); // Disable focus painting for a cleaner look
     
   }
     
