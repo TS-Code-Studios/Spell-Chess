@@ -1,10 +1,5 @@
-package com.javadevs.gui;
+package com.javadevs.gui.game;
 
-//Developer: simonkdev
-//Version: 0.1 10.03.2025
-//add Information requests here:
-
-import com.javadevs.gui.chessButton;
 import com.javadevs.ChessGameHandler;
 
 import java.util.ArrayList;
@@ -28,7 +23,7 @@ public class ChessBoard extends JPanel
         countRow = 1; // Reset countRow for the first column
         setBackground(Color.LIGHT_GRAY);
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        setPreferredSize(new Dimension(400, 400)); // Set preferred size for the panel
+        setSize(new Dimension(400, 400)); // Set preferred size for the panel
         setVisible(true);
         setOpaque(true); // Make sure the panel is opaque
         setFocusable(true); // Make the panel focusable

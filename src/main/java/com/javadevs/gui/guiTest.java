@@ -1,6 +1,6 @@
 package com.javadevs.gui;
 
-import com.javadevs.gui.ChessboardGUI;
+import com.javadevs.gui.game.ChessboardGUI;
 
 
 public class guiTest {

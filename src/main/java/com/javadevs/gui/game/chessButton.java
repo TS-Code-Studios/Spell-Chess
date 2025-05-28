@@ -1,4 +1,4 @@
-package com.javadevs.gui;
+package com.javadevs.gui.game;
 
 //Author: @simonkdev
 //Version: 17/2/2025
