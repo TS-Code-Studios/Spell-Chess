@@ -13,16 +13,21 @@ import com.javadevs.ChessGameHandler;
 
 //für position[][] gilt: position[y][x] (im Array)
 
-public class ChessboardGUI extends JFrame;
+public class ChessboardGUI extends JFrame
 {
-  ChessBoard board = new ChessBoard();
-  ChessGameHandler gameHandler = new ChessGameHandler();
-
   @SuppressWarnings("unused")
-
+  
   public ChessboardGUI () 
   {
     //board.ChessBoard();
+
+  }
+
+  public void init_main_window()
+  {
+    ChessBoard board = new ChessBoard();
+    ChessGameHandler gameHandler = new ChessGameHandler();
+  
     this.add(board);
     setTitle("Chessboard");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -30,8 +35,6 @@ public class ChessboardGUI extends JFrame;
     setResizable(false);
     setVisible(true);
   }
-    
-  @SuppressWarnings("static-access") 						//Otherwise causes trouble in buttonInit() for using setSquareColor()
-
 }
 
+ 

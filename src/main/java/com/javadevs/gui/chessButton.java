@@ -3,16 +3,18 @@ package com.javadevs.gui;
 //Author: @simonkdev
 //Version: 17/2/2025
 //ask for more information if needed
-import com.javadevsChessGameHandler;
+import com.javadevs.ChessGameHandler;
+
+import java.awt.Color;
+
 import javax.swing.JButton;
 
 public class chessButton extends JButton
 {
     @SuppressWarnings("unused")
     String name;
-    static String posY;
-    static String posX;
-    static String color;
+    String posY;
+    String posX;
     static int intX;
     static int intY;
     public String color;
@@ -33,7 +35,7 @@ public class chessButton extends JButton
 
 
 
-    public static void setSquareColor() 
+    public void setSquareColor() 
     {
         convertPosition(posY + posX);                                   // Convert the position to 0-based coordinates
         
@@ -43,15 +45,17 @@ public class chessButton extends JButton
         if (sum % 2 == 0) 
         {
             color = "black";
+            this.setBackground(Color.BLACK); // Set the button background color to black
         } 
         else 
         {
             color = "white";
+            this.setBackground(Color.WHITE); // Set the button background color to white
         }
     }
 
-    public static void loadSquareColor(String colorSet)
+    public void loadSquareColor(String colorSet)
     {
-        setBackground()
+        setBackground(Color.BLACK);
     }
 }
