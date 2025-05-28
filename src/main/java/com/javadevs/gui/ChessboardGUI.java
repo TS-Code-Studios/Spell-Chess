@@ -22,8 +22,8 @@ public class ChessboardGUI extends JFrame;
 
   public ChessboardGUI () 
   {
-    board.ChessBoard();
-    add(board);
+    //board.ChessBoard();
+    this.add(board);
     setTitle("Chessboard");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setSize(800, 800);
