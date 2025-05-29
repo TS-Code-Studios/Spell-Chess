@@ -82,7 +82,13 @@ public class ChessGameHandler {
                     if (testGame.isMovePossible(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX], true)) {
                         //Make the move and update castling availability, then break the while(true) loop
                         //System.out.println("DEBUG: Move is being made...");
-                        testGame.makeMove(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX]);
+                        if ((moveComponents[PIECE_INDEX].equals("p") && moveComponents[TARGET_SQUARE_INDEX].charAt(1) == '8') || (moveComponents[PIECE_INDEX].equals("P") && moveComponents[TARGET_SQUARE_INDEX].charAt(1) == '1')) {
+                            System.out.println("Enter the piece to promote to: ");
+                            String promotionPiece = input.nextLine();
+
+                            testGame.makeMove(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX], true, promotionPiece.charAt(0));
+                        }
+                        else {testGame.makeMove(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX], false, '-');}
 
                         //System.out.println("DEBUG: Move made successfully.");
                         break;
@@ -400,7 +406,7 @@ public class ChessGameHandler {
             boolean[] previousCastlingBlackInfoBuffer = castlingBlackInfo.clone();
 
             // Makes the move, which includes an update of the check booleans
-            makeMove(piece, startSquare, targetSquare);
+            makeMove(piece, startSquare, targetSquare, false, '-');
 
             // Checks for checks
             if (playerToMove == 'w' && castlingWhiteInfo[IN_CHECK_INDEX]) {
@@ -650,7 +656,7 @@ public class ChessGameHandler {
     }
 
     //Method for changing the position and positionMeta arrays, THIS DOES NOT CHECK IF THE MOVE IS POSSIBLE!
-    public void makeMove(@NotNull String piece, String startSquare, String targetSquare) {
+    public void makeMove(@NotNull String piece, String startSquare, String targetSquare, boolean isPromoting, char promotionPiece) {
         switch (piece) {
             //Is white castling kingside?
             case "o-o" -> {
@@ -711,7 +717,10 @@ public class ChessGameHandler {
             int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
 
             position[startSquareRank][startSquareFile] = EMPTY_SQUARE_CHAR;
-            position[targetSquareRank][targetSquareFile] = piece.charAt(0);
+
+            // If the player is promoting, set the target square to the promotion piece, otherwise set it to the piece making the move
+            if(isPromoting) {position[targetSquareRank][targetSquareFile] = promotionPiece;}
+            else {position[targetSquareRank][targetSquareFile] = piece.charAt(0);}
 
         } catch (Exception invalidMoveInput) {
             System.err.println("Invalid move input: " + invalidMoveInput);
