@@ -12,7 +12,7 @@ public class ChessGameHandler {
     private static String playerToMove = "w";
     private final List<String> emptySquares = Arrays.asList("-", "[", "]", "%");
     // All attributes are private for the sake of encapsulation
-    private String[][] position;
+    public String[][] position;
     private String[][] coverageMap;
 
     private int[] positionMeta;

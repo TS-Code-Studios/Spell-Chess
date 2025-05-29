@@ -15,8 +15,8 @@ public class chessButton extends JButton
     String name;
     String posY;
     String posX;
-    static int intX;
-    static int intY;
+    int intX;
+    int intY;
     public String color;
     
     public chessButton(String posXNew, String posYNew)
@@ -27,7 +27,7 @@ public class chessButton extends JButton
         //2D array position[][] from ChessGameHandler.java has format position[y][x]
     }
     
-    public static void convertPosition(String pos)                  //CONVERTS POSITION TO NUMERIC VALUE FOR LATER COLOR CALCULATION
+    public void convertPosition(String pos)                  //CONVERTS POSITION TO NUMERIC VALUE FOR LATER COLOR CALCULATION
     {
         intX = pos.charAt(0) - 'a'; 	        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
         intY = Character.getNumericValue(pos.charAt(1)) - 1; 		// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
