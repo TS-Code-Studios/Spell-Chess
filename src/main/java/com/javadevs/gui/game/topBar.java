@@ -33,6 +33,7 @@ public class topBar extends JPanel
         load_buttons_bar();
         setOpaque(false); // Make sure background is transparent for future-proofing
         setVisible(true);
+        //Hi 
     }
 
     public void load_buttons_bar() {
