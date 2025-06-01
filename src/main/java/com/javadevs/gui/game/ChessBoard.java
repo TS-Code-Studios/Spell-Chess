@@ -18,25 +18,33 @@ public class ChessBoard extends JPanel
     Dimension boardSize;
     int TRUE_BOARD_WIDTH;
 
+    Icon TEST_BUTTON_ICON = new ImageIcon("src/main/resources/pieces/black-bishop.png"); // Path to the icon
+
     public ChessBoard(ChessGameHandler arrayHandler) 
     {
         buttons = new ArrayList<>();
         count = 0;
         countRow = 1; // Reset countRow for the first column
-        boardSize = new Dimension(300, 300); // Set the size of the board
+        boardSize = new Dimension(400, 400); // Set the size of the board
         TRUE_BOARD_WIDTH = boardSize.width; // Store the true width of the board
         
+        System.out.println("TRUE_BOARD_WIDTH: " + TRUE_BOARD_WIDTH);
+        System.out.println("Board size: " + boardSize);
+
+
+
         setBackground(Color.LIGHT_GRAY);
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         setSize(new Dimension(boardSize)); // Set preferred size for the panel
         setVisible(true);
-        setOpaque(true); // Make sure the panel is opaque
+        setOpaque(false); // Make sure the panel is opaque
         setFocusable(true); // Make the panel focusable
         setLayout(new GridLayout(8, 8));
-        int panelWidth = 300;  // Width of the panel
+        int panelWidth = TRUE_BOARD_WIDTH;  // Width of the panel
         buttonSize = panelWidth / 8; // Since it's an 8x8 grid, divide the panel size by 8
+        System.out.println("Button size: " + buttonSize);
         boardInit();
-        set_debug_board_labels(arrayHandler); // Set debug labels for the buttons
+        //set_debug_board_labels(arrayHandler); // Set debug labels for the buttons
     }
     
     public void boardInit()
@@ -70,16 +78,18 @@ public class ChessBoard extends JPanel
   public void buttonConfig(chessButton target)
   {
     target.setSize(new Dimension(buttonSize, buttonSize));
+    System.out.println("Button size set to: " + target.getSize());
     ActionListener ON_BUTTON_CLICK = new ActionListener() 
         {
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println(target.posY + target.posX); // Print the position of the button
-            }
+                System.out.println(target.posY + target.posX);
+                System.out.println("Button size: " + target.getSize());            }
         };
     target.addActionListener(ON_BUTTON_CLICK);
     target.setSquareColor();
     //target.setLabel(target.posY + target.posX);
+    //target.setIcon(TEST_BUTTON_ICON);
     target.setFocusPainted(false);    
   }
 

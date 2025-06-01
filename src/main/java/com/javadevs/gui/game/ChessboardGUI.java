@@ -33,11 +33,15 @@ public class ChessboardGUI extends JFrame
   @SuppressWarnings("unused")
   public Dimension FRAME_SIZE = new Dimension(400, 600);
   
+  private int SPACER_HEIGHT;
+
   public ChessboardGUI () 
   {
     //board.ChessBoard();
 
   }
+
+
 
   public void init_main_window()
   {
@@ -47,8 +51,11 @@ public class ChessboardGUI extends JFrame
     topBar topBar = new topBar();
     BoardSpace SPACED_BOARD = new BoardSpace(board, this);
 
-    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 50);
-    Dimension TOP_SPACER_SIZE = new Dimension(0, 50);
+    SPACER_HEIGHT = (this.FRAME_SIZE.height - board.getHeight() - actionBar.getHeight() - topBar.getHeight()) / 2;
+    System.out.println("SPACER_HEIGHT: " + SPACER_HEIGHT);
+
+    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, SPACER_HEIGHT);
+    Dimension TOP_SPACER_SIZE = new Dimension(0, SPACER_HEIGHT);
 
     setSize(FRAME_SIZE);
 
