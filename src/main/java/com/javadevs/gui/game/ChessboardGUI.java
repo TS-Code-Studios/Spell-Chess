@@ -54,8 +54,11 @@ public class ChessboardGUI extends JFrame
     SPACER_HEIGHT = (this.FRAME_SIZE.height - board.getHeight() - actionBar.getHeight() - topBar.getHeight()) / 2;
     System.out.println("SPACER_HEIGHT: " + SPACER_HEIGHT);
 
-    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, SPACER_HEIGHT);
-    Dimension TOP_SPACER_SIZE = new Dimension(0, SPACER_HEIGHT);
+    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 86);
+    Dimension TOP_SPACER_SIZE = new Dimension(0, 86);
+
+    System.out.println("Bottom Spacer: " + BOTTOM_SPACER_SIZE);
+    System.out.println("Top Spacer: " + TOP_SPACER_SIZE);
 
     setSize(FRAME_SIZE);
 
@@ -69,7 +72,7 @@ public class ChessboardGUI extends JFrame
     getContentPane().setBackground(Color.BLACK);
 
     // 2. Set layout on the background panel
-    BoxLayout WINDOW_LAYOUT = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
+    BoxLayout WINDOW_LAYOUT = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS);
     getContentPane().setLayout(WINDOW_LAYOUT);
 
     // 3. Add components to the background panel
@@ -83,6 +86,11 @@ public class ChessboardGUI extends JFrame
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setResizable(false);
     setVisible(true);
+
+    int TOTAL_CONTENT_SIZE = board.getHeight() + actionBar.getHeight() + topBar.getHeight() + SPACER_HEIGHT * 2;
+    System.out.println("Total content size: " + TOTAL_CONTENT_SIZE);
+
+    System.out.println("Action Bar Height: " + actionBar.getSize());
   }
 }
 

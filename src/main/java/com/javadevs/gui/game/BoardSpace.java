@@ -23,11 +23,11 @@ public class BoardSpace extends JPanel
         System.out.println("WIDTH_SPACING: " + WIDTH_SPACING);
 
 
-        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.getHeight());
+        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.boardSize.height);
         System.out.println("SPACER_SIZE: " + SPACER_SIZE);
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setSize(new Dimension(frame.FRAME_SIZE.width, board.getHeight()));
+        setSize(400, 320);             //(new Dimension(frame.FRAME_SIZE.width, board.getHeight()));
         System.out.println("BoardSpace size: " + getSize());
         setOpaque(false);
         setVisible(true);
@@ -40,8 +40,8 @@ public class BoardSpace extends JPanel
         LEFT_SPACER = new JPanel();
         RIGHT_SPACER = new JPanel();
 
-        LEFT_SPACER.setPreferredSize(SPACER_SIZE);
-        RIGHT_SPACER.setPreferredSize(SPACER_SIZE);
+        LEFT_SPACER.setSize(40, 320);
+        RIGHT_SPACER.setSize(40, 320);
 
         LEFT_SPACER.setOpaque(false);
         RIGHT_SPACER.setOpaque(false);

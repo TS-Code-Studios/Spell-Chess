@@ -15,7 +15,7 @@ public class ChessBoard extends JPanel
     int count;
     int countRow;
     int buttonSize;
-    Dimension boardSize;
+    public Dimension boardSize;
     int TRUE_BOARD_WIDTH;
 
     Icon TEST_BUTTON_ICON = new ImageIcon("src/main/resources/pieces/black-bishop.png"); // Path to the icon
@@ -25,7 +25,7 @@ public class ChessBoard extends JPanel
         buttons = new ArrayList<>();
         count = 0;
         countRow = 1; // Reset countRow for the first column
-        boardSize = new Dimension(400, 400); // Set the size of the board
+        boardSize = new Dimension(320, 320); // Set the size of the board
         TRUE_BOARD_WIDTH = boardSize.width; // Store the true width of the board
         
         System.out.println("TRUE_BOARD_WIDTH: " + TRUE_BOARD_WIDTH);
@@ -88,9 +88,10 @@ public class ChessBoard extends JPanel
         };
     target.addActionListener(ON_BUTTON_CLICK);
     target.setSquareColor();
-    //target.setLabel(target.posY + target.posX);
+    //target.setLabel(" ");
     //target.setIcon(TEST_BUTTON_ICON);
-    target.setFocusPainted(false);    
+    target.setFocusPainted(false);
+    target.setBorderPainted(false);    
   }
 
   public void set_debug_button_labels(ChessGameHandler arrayHandler, chessButton button)

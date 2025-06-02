@@ -63,6 +63,9 @@ public class bottomBar extends JPanel
         ABORT_BUTTON.addActionListener(ABORT_BUTTON_LISTENER);
         UNDO_BUTTON.addActionListener(UNDO_BUTTON_LISTENER);
 
+        ABORT_BUTTON.setBorderPainted(true);
+        UNDO_BUTTON.setBorderPainted(true);
+
         this.add(ABORT_BUTTON);
         this.add(UNDO_BUTTON);
 

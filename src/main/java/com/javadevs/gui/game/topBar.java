@@ -28,11 +28,12 @@ public class topBar extends JPanel
     Dimension BAR_SPACER = new Dimension(260, 0); // Space between the two buttons
 
     public topBar() {
-        setSize(new Dimension(400, 30));
+        setSize(400, 30);                 //(new Dimension(400, 30));
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS)); // Use BoxLayout for proper spacing
         load_buttons_bar();
         setOpaque(false); // Make sure background is transparent for future-proofing
         setVisible(true);
+        System.out.println(this.getSize());
         //Hi 
     }
 
@@ -40,8 +41,8 @@ public class topBar extends JPanel
         backButton = new JButton();
         settingsButton = new JButton();
 
-        backButton.setPreferredSize(new Dimension(30, 30));
-        settingsButton.setPreferredSize(new Dimension(30, 30));
+        backButton.setSize(30, 30);             //(new Dimension(30, 30));
+        settingsButton.setSize(30, 30);             //(new Dimension(30, 30));
 
         backButton.setIcon(BACK_ICON);
         settingsButton.setIcon(SETTINGS_ICON);
@@ -57,11 +58,14 @@ public class topBar extends JPanel
         backButton.setFocusPainted(false);
         settingsButton.setFocusPainted(false);
 
+        backButton.setBorderPainted(true);
+        settingsButton.setBorderPainted(true);
+
         // backButton.addActionListener(LIS_LIB.BACK_BUTTON_LISTENER);
         // settingsButton.addActionListener(LIS_LIB.SETTINGS_BUTTON_LISTENER);
         
         JPanel SPACER_PANEL = new JPanel();
-        SPACER_PANEL.setPreferredSize(BAR_SPACER);
+        SPACER_PANEL.setSize(260, 0);
         SPACER_PANEL.setOpaque(false); // Make sure the spacer is transparent
         SPACER_PANEL.setVisible(true);
         SPACER_PANEL.setLayout(new GridLayout());
