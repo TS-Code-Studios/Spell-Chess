@@ -20,12 +20,19 @@ public class BoardSpace extends JPanel
         int WIDTH_SPACING = (frame.FRAME_SIZE.width - board.TRUE_BOARD_WIDTH) / 2;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         SPACER_SIZE = new Dimension(WIDTH_SPACING, board.boardSize.height);
         System.out.println("SPACER_SIZE: " + SPACER_SIZE);
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setSize(400, 320);             //(new Dimension(frame.FRAME_SIZE.width, board.getHeight()));
         System.out.println("BoardSpace size: " + getSize());
+=======
+        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.getHeight());
+
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setSize(new Dimension(frame.getWidth(), board.getHeight()));
+>>>>>>> parent of b80bc00 (something broke idfk)
 =======
         SPACER_SIZE = new Dimension(WIDTH_SPACING, board.getHeight());
 

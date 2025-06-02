@@ -24,7 +24,11 @@ public class ChessBoard extends JPanel
         count = 0;
         countRow = 1; // Reset countRow for the first column
 <<<<<<< HEAD
+<<<<<<< HEAD
         boardSize = new Dimension(320, 320); // Set the size of the board
+=======
+        boardSize = new Dimension(300, 300); // Set the size of the board
+>>>>>>> parent of b80bc00 (something broke idfk)
 =======
         boardSize = new Dimension(300, 300); // Set the size of the board
 >>>>>>> parent of b80bc00 (something broke idfk)
@@ -84,11 +88,14 @@ public class ChessBoard extends JPanel
     target.addActionListener(ON_BUTTON_CLICK);
     target.setSquareColor();
 <<<<<<< HEAD
+<<<<<<< HEAD
     //target.setLabel(" ");
     //target.setIcon(TEST_BUTTON_ICON);
     target.setFocusPainted(false);
     target.setBorderPainted(false);    
 =======
+=======
+>>>>>>> parent of b80bc00 (something broke idfk)
     //target.setLabel(target.posY + target.posX);
     target.setFocusPainted(false);    
 >>>>>>> parent of b80bc00 (something broke idfk)

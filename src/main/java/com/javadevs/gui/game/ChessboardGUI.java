@@ -48,6 +48,7 @@ public class ChessboardGUI extends JFrame
     BoardSpace SPACED_BOARD = new BoardSpace(board, this);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     SPACER_HEIGHT = (this.FRAME_SIZE.height - board.getHeight() - actionBar.getHeight() - topBar.getHeight()) / 2;
     System.out.println("SPACER_HEIGHT: " + SPACER_HEIGHT);
 
@@ -56,6 +57,10 @@ public class ChessboardGUI extends JFrame
 
     System.out.println("Bottom Spacer: " + BOTTOM_SPACER_SIZE);
     System.out.println("Top Spacer: " + TOP_SPACER_SIZE);
+=======
+    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 50);
+    Dimension TOP_SPACER_SIZE = new Dimension(0, 50);
+>>>>>>> parent of b80bc00 (something broke idfk)
 =======
     Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 50);
     Dimension TOP_SPACER_SIZE = new Dimension(0, 50);
