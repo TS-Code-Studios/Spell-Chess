@@ -15,20 +15,23 @@ public class BoardSpace extends JPanel
 
     GridLayout SPACED_LAYOUT;
 
-    int WIDTH_SPACING;
-
     public BoardSpace(ChessBoard board, ChessboardGUI frame)
     {
-        WIDTH_SPACING = (frame.FRAME_SIZE.width - board.TRUE_BOARD_WIDTH) / 2;
-        System.out.println("WIDTH_SPACING: " + WIDTH_SPACING);
+        int WIDTH_SPACING = (frame.FRAME_SIZE.width - board.TRUE_BOARD_WIDTH) / 2;
 
-
+<<<<<<< HEAD
         SPACER_SIZE = new Dimension(WIDTH_SPACING, board.boardSize.height);
         System.out.println("SPACER_SIZE: " + SPACER_SIZE);
 
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setSize(400, 320);             //(new Dimension(frame.FRAME_SIZE.width, board.getHeight()));
         System.out.println("BoardSpace size: " + getSize());
+=======
+        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.getHeight());
+
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        setSize(new Dimension(frame.getWidth(), board.getHeight()));
+>>>>>>> parent of b80bc00 (something broke idfk)
         setOpaque(false);
         setVisible(true);
         build_spacers();
@@ -48,13 +51,6 @@ public class BoardSpace extends JPanel
 
         LEFT_SPACER.setVisible(true);
         RIGHT_SPACER.setVisible(true);
-
-        if (WIDTH_SPACING <= 0) {
-            LEFT_SPACER.setVisible(false);
-            RIGHT_SPACER.setVisible(false);
-        }
-
-
     }
 
     public void add_spacers(ChessBoard board)
