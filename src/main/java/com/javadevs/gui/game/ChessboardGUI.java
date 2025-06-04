@@ -2,101 +2,108 @@ package com.javadevs.gui.game;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 
 //Developer: @simonkdev
 //Version: 17/02/2025
 //For more information check out INFORMATION.md
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+
 
 import com.javadevs.ChessGameHandler;
-import com.javadevs.gui.game.ChessBoard;
-import com.javadevs.gui.game.bottomBar;
-import com.javadevs.gui.game.topBar;
-import com.javadevs.gui.game.BoardSpace;
 
-import javax.swing.ImageIcon;
-import com.javadevs.gui.BasicBackgroundPanel;
+
 
 //für position[][] gilt: position[y][x] (im Array)
 
 public class ChessboardGUI extends JFrame
 {
-  @SuppressWarnings("unused")
   public Dimension FRAME_SIZE = new Dimension(400, 600);
-  
+
+  ChessGameHandler gameHandler;
+  ChessBoard board;
+  bottomBar bottomBar;
+  topBar topBar;
+  BoardSpace spacedBoard;
+
+  Dimension TOP_SPACER_SIZE;
+  Dimension BOTTOM_SPACER_SIZE;
+
+  Color BACKGROUND_COLOR_RGB = new Color(89, 84, 87); // RGB for black background
+
+  // Remove BoxLayout, use GridBagLayout instead
+  // BoxLayout WINDOW_LAYOUT = new BoxLayout(getContentPane(), BoxLayout.Y_AXIS);
+
   public ChessboardGUI () 
   {
-    //board.ChessBoard();
-
+     gameHandler = new ChessGameHandler();
+     board = new ChessBoard(gameHandler);
+     bottomBar = new bottomBar(this);
+     topBar = new topBar(this);
+     spacedBoard = new BoardSpace(board, this);
   }
 
   public void init_main_window()
   {
-    ChessGameHandler gameHandler = new ChessGameHandler();
-    ChessBoard board = new ChessBoard(gameHandler);
-    bottomBar actionBar = new bottomBar();
-    topBar topBar = new topBar();
-    BoardSpace SPACED_BOARD = new BoardSpace(board, this);
+    window_init();
+    init_spacer_sizes();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    SPACER_HEIGHT = (this.FRAME_SIZE.height - board.getHeight() - actionBar.getHeight() - topBar.getHeight()) / 2;
-    System.out.println("SPACER_HEIGHT: " + SPACER_HEIGHT);
+    getContentPane().setBackground(BACKGROUND_COLOR_RGB); // Set background color
 
-    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 86);
-    Dimension TOP_SPACER_SIZE = new Dimension(0, 86);
+    setLayout(new GridBagLayout());
 
-    System.out.println("Bottom Spacer: " + BOTTOM_SPACER_SIZE);
-    System.out.println("Top Spacer: " + TOP_SPACER_SIZE);
-=======
-    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 50);
-    Dimension TOP_SPACER_SIZE = new Dimension(0, 50);
->>>>>>> parent of b80bc00 (something broke idfk)
-=======
-    Dimension BOTTOM_SPACER_SIZE = new Dimension(0, 50);
-    Dimension TOP_SPACER_SIZE = new Dimension(0, 50);
->>>>>>> parent of b80bc00 (something broke idfk)
+    int row = 0;
+    addWithConstraints(topBar, row++, topBar.BAR_HEIGHT, false);
+    addWithConstraints(Box.createRigidArea(TOP_SPACER_SIZE), row++, TOP_SPACER_SIZE.height, true);
+    addWithConstraints(spacedBoard, row++, board.BOARD_SIZE.height, false);
+    addWithConstraints(Box.createRigidArea(BOTTOM_SPACER_SIZE), row++, BOTTOM_SPACER_SIZE.height, true);
+    addWithConstraints(bottomBar, row, bottomBar.BAR_HEIGHT, false);
 
-    setSize(FRAME_SIZE);
+    setVisible(true); // <-- Move here!
+  }
 
-    
-    // 1. Set the background panel as content pane FIRST
-    BasicBackgroundPanel backgroundPanel = new BasicBackgroundPanel(
-        new ImageIcon("src/main/resources/background.png").getImage()
-    );
-    setContentPane(backgroundPanel);
+  private void addWithConstraints(java.awt.Component comp, int gridy, int height, boolean isSpacer) {
+    GridBagConstraints gbc = configureConstraints(gridy, isSpacer);
+    comp.setPreferredSize(new Dimension(FRAME_SIZE.width, height));
+    getContentPane().add(comp, gbc);
+  }
 
-    getContentPane().setBackground(Color.BLACK);
+  private GridBagConstraints configureConstraints(int gridy, boolean isSpacer) {
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = gridy;
+    gbc.fill = isSpacer ? GridBagConstraints.BOTH : GridBagConstraints.HORIZONTAL;
+    gbc.weightx = 1.0;
+    gbc.weighty = isSpacer ? 1.0 : 0.0;
+    gbc.ipady = 0;
+    return gbc;
+  }
 
-    // 2. Set layout on the background panel
-    BoxLayout WINDOW_LAYOUT = new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS);
-    getContentPane().setLayout(WINDOW_LAYOUT);
+  public void init_spacer_sizes()
+  {
+    double VERTICAL_SPACING_BUFFER = 0.5 * (FRAME_SIZE.height - (board.BOARD_SIZE.height + topBar.BAR_HEIGHT + bottomBar.BAR_HEIGHT));
+    System.out.println("Vertical spacing buffer: " + VERTICAL_SPACING_BUFFER);
+    int VERTICAL_SPACING = (int) VERTICAL_SPACING_BUFFER;
+    System.out.println("Vertical spacing: " + VERTICAL_SPACING);
 
-    // 3. Add components to the background panel
-    getContentPane().add(topBar);
-    getContentPane().add(Box.createRigidArea(TOP_SPACER_SIZE));
-    getContentPane().add(SPACED_BOARD);
-    getContentPane().add(Box.createRigidArea(BOTTOM_SPACER_SIZE));
-    getContentPane().add(actionBar);
+    BOTTOM_SPACER_SIZE = new Dimension(FRAME_SIZE.width, VERTICAL_SPACING);
+    TOP_SPACER_SIZE = new Dimension(FRAME_SIZE.width, VERTICAL_SPACING);
 
-    setTitle("Chessboard");
+  }
+
+  public void window_init()
+  {
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    setTitle("Spell-Chess");
+    setSize(FRAME_SIZE);
+    // setLayout(WINDOW_LAYOUT); // Remove this line, layout is set in init_main_window
     setResizable(false);
-    setVisible(true);
-
-    int TOTAL_CONTENT_SIZE = board.getHeight() + actionBar.getHeight() + topBar.getHeight() + SPACER_HEIGHT * 2;
-    System.out.println("Total content size: " + TOTAL_CONTENT_SIZE);
-
-    System.out.println("Action Bar Height: " + actionBar.getSize());
+    // setVisible(true); // <-- Remove from here!
   }
 }
 

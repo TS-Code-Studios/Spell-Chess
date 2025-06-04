@@ -1,8 +1,7 @@
 package com.javadevs.gui.game;
 
-import com.javadevs.gui.game.uiButtonListeners;
-
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -21,12 +20,14 @@ public class bottomBar extends JPanel
     Icon ABORT_PRESSED_ICON = new javax.swing.ImageIcon("src/main/resources/icons/abort_button_pressed.png");
     Icon UNDO_PRESSED_ICON = new javax.swing.ImageIcon("src/main/resources/icons/undo_button_pressed.png");
 
-    
-    uiButtonListeners LIS_LIB = new uiButtonListeners();
+    public int BAR_HEIGHT = 55; // Height of the bottom bar
+    int BUTTON_WIDTH = 180; // Width of the buttons
 
-    public bottomBar()
+
+    public bottomBar(ChessboardGUI frame) 
     {
-        setSize(400, 33);
+        Dimension BAR_SIZE_BUFFER = new Dimension(frame.FRAME_SIZE.width, BAR_HEIGHT);
+        setPreferredSize(BAR_SIZE_BUFFER);
         setBackground(Color.black);
         setLayout(new GridLayout(1, 4)); // 1 row, 4 columns
         load_buttons_bar();
@@ -39,8 +40,10 @@ public class bottomBar extends JPanel
         ABORT_BUTTON = new JButton();
         UNDO_BUTTON = new JButton();
         
-        ABORT_BUTTON.setSize(180, 33);
-        UNDO_BUTTON.setSize(180, 33);
+        Dimension BUTTON_SIZE_BUFFER = new Dimension(BUTTON_WIDTH, BAR_HEIGHT);
+
+        ABORT_BUTTON.setPreferredSize(BUTTON_SIZE_BUFFER);
+        UNDO_BUTTON.setPreferredSize(BUTTON_SIZE_BUFFER);
 
         ABORT_BUTTON.setIcon(ABORT_ICON);
         UNDO_BUTTON.setIcon(UNDO_ICON);
@@ -62,9 +65,6 @@ public class bottomBar extends JPanel
 
         ABORT_BUTTON.addActionListener(ABORT_BUTTON_LISTENER);
         UNDO_BUTTON.addActionListener(UNDO_BUTTON_LISTENER);
-
-        ABORT_BUTTON.setBorderPainted(true);
-        UNDO_BUTTON.setBorderPainted(true);
 
         this.add(ABORT_BUTTON);
         this.add(UNDO_BUTTON);

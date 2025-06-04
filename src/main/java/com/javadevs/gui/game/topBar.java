@@ -1,13 +1,10 @@
 package com.javadevs.gui.game;
-import com.javadevs.gui.game.uiButtonListeners;
 
 
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionListener;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,31 +15,38 @@ public class topBar extends JPanel
 { 
     Icon BACK_ICON = new ImageIcon("src/main/resources/icons/back.png");
     Icon SETTINGS_ICON = new ImageIcon("src/main/resources/icons/settings.png");
+    Icon TOP_LOGO_ICON = new ImageIcon("src/main/resources/icons/icons8-chess-com-96.png");
 
-    Icon TOP_LOGO_ICON = new ImageIcon("src/main/resources/icons/top_logo.png");
 
-    uiButtonListeners LIS_LIB = new uiButtonListeners();
+    JButton backButton = new JButton();
+    JButton settingsButton = new JButton();
+    JButton TOP_LOGO_PLACEHOLDER = new JButton();
+    JPanel SPACER_PANEL; // Spacer panel for future logo
 
-    JButton backButton;
-    JButton settingsButton;
-    Dimension BAR_SPACER = new Dimension(260, 0); // Space between the two buttons
+    int BUTTON_SIZE = 30; // Size of the buttons
+    int BAR_HEIGHT = 85; // Height of the top bar
 
-    public topBar() {
-        setSize(400, 30);                 //(new Dimension(400, 30));
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS)); // Use BoxLayout for proper spacing
-        load_buttons_bar();
+    Dimension BAR_SPACER = new Dimension(260, BAR_HEIGHT); // Space between the two buttons
+
+    BoxLayout BAR_LAYOUT = new BoxLayout(this, BoxLayout.X_AXIS); // Layout for the top bar
+
+    public topBar(ChessboardGUI frame) {
+        Dimension SIZE_BUFFER = new Dimension(frame.FRAME_SIZE.width, BAR_HEIGHT);
+        setPreferredSize(SIZE_BUFFER);                 //(new Dimension(400, 30));
+        setLayout(BAR_LAYOUT); // Use BoxLayout for proper spacing
+        init_buttons();
         setOpaque(false); // Make sure background is transparent for future-proofing
         setVisible(true);
-        System.out.println(this.getSize());
-        //Hi 
+        init_buttons();
+        init_spacer_panel();
+        load_buttons();
     }
 
-    public void load_buttons_bar() {
-        backButton = new JButton();
-        settingsButton = new JButton();
-
-        backButton.setSize(30, 30);             //(new Dimension(30, 30));
-        settingsButton.setSize(30, 30);             //(new Dimension(30, 30));
+    public void init_buttons() 
+    {
+        Dimension BUTTON_SIZE_BUFFER = new Dimension(BUTTON_SIZE, BUTTON_SIZE);
+        backButton.setPreferredSize(BUTTON_SIZE_BUFFER);             //(new Dimension(30, 30));
+        settingsButton.setPreferredSize(BUTTON_SIZE_BUFFER);             //(new Dimension(30, 30));
 
         backButton.setIcon(BACK_ICON);
         settingsButton.setIcon(SETTINGS_ICON);
@@ -58,29 +62,38 @@ public class topBar extends JPanel
         backButton.setFocusPainted(false);
         settingsButton.setFocusPainted(false);
 
-        backButton.setBorderPainted(true);
-        settingsButton.setBorderPainted(true);
+        backButton.setBorderPainted(false);
+        settingsButton.setBorderPainted(false);
 
         // backButton.addActionListener(LIS_LIB.BACK_BUTTON_LISTENER);
         // settingsButton.addActionListener(LIS_LIB.SETTINGS_BUTTON_LISTENER);
-        
-        JPanel SPACER_PANEL = new JPanel();
-        SPACER_PANEL.setSize(260, 0);
+    }
+
+    public void init_spacer_panel()
+    {
+        Dimension SPACER_SIZE_BUFFER = new Dimension(260, BAR_HEIGHT); // Width of the spacer panel
+        SPACER_PANEL = new JPanel();
+        SPACER_PANEL.setPreferredSize(SPACER_SIZE_BUFFER); // Set the size of the spacer panel
         SPACER_PANEL.setOpaque(false); // Make sure the spacer is transparent
         SPACER_PANEL.setVisible(true);
         SPACER_PANEL.setLayout(new GridLayout());
-        
-        JButton TOP_LOGO_PLACEHOLDER = new JButton();
+
+        init_logo_holder();
+        SPACER_PANEL.add(TOP_LOGO_PLACEHOLDER); // Add a placeholder for future logo
+    }
+
+    public void init_logo_holder()
+    {
         TOP_LOGO_PLACEHOLDER.setContentAreaFilled(false);
         TOP_LOGO_PLACEHOLDER.setOpaque(false);
         TOP_LOGO_PLACEHOLDER.setBorderPainted(false);
         TOP_LOGO_PLACEHOLDER.setFocusPainted(false);
         TOP_LOGO_PLACEHOLDER.setVisible(true); // Placeholder for future logo
         TOP_LOGO_PLACEHOLDER.setIcon(TOP_LOGO_ICON);
-        
-        SPACER_PANEL.add(TOP_LOGO_PLACEHOLDER); // Add a placeholder for future logo
-        
+    }
 
+    public void load_buttons()
+    {
 
         this.add(backButton);
         this.add(SPACER_PANEL); // Invisible, future-proof spacer

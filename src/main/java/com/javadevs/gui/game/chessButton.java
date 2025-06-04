@@ -3,7 +3,6 @@ package com.javadevs.gui.game;
 //Author: @simonkdev
 //Version: 17/2/2025
 //ask for more information if needed
-import com.javadevs.ChessGameHandler;
 
 import java.awt.Color;
 
@@ -11,7 +10,6 @@ import javax.swing.JButton;
 
 public class chessButton extends JButton
 {
-    @SuppressWarnings("unused")
     String name;
     String posY;
     String posX;

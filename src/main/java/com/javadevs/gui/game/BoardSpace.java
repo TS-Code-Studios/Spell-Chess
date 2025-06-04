@@ -1,7 +1,6 @@
 package com.javadevs.gui.game;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -13,34 +12,23 @@ public class BoardSpace extends JPanel
     
     Dimension SPACER_SIZE;
 
-    GridLayout SPACED_LAYOUT;
+    BoxLayout SPACE_LAYOUT;
 
     public BoardSpace(ChessBoard board, ChessboardGUI frame)
     {
-        int WIDTH_SPACING = (frame.FRAME_SIZE.width - board.TRUE_BOARD_WIDTH) / 2;
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.boardSize.height);
+        int HORIZONTAL_SPACING = (frame.FRAME_SIZE.width - board.BOARD_SIZE.width) / 2;
+        SPACER_SIZE = new Dimension(HORIZONTAL_SPACING, board.BOARD_SIZE.height);
         System.out.println("SPACER_SIZE: " + SPACER_SIZE);
+        SPACE_LAYOUT = new BoxLayout(this, BoxLayout.X_AXIS);
 
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setSize(400, 320);             //(new Dimension(frame.FRAME_SIZE.width, board.getHeight()));
-        System.out.println("BoardSpace size: " + getSize());
-=======
-        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.getHeight());
+        setLayout(SPACE_LAYOUT);
 
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setSize(new Dimension(frame.getWidth(), board.getHeight()));
->>>>>>> parent of b80bc00 (something broke idfk)
-=======
-        SPACER_SIZE = new Dimension(WIDTH_SPACING, board.getHeight());
+        Dimension SPACE_SIZE_BUFFER = new Dimension(frame.FRAME_SIZE.width, board.BOARD_SIZE.height);
+        setPreferredSize(SPACE_SIZE_BUFFER);
 
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        setSize(new Dimension(frame.getWidth(), board.getHeight()));
->>>>>>> parent of b80bc00 (something broke idfk)
         setOpaque(false);
         setVisible(true);
+
         build_spacers();
         add_spacers(board);
     }
@@ -50,8 +38,8 @@ public class BoardSpace extends JPanel
         LEFT_SPACER = new JPanel();
         RIGHT_SPACER = new JPanel();
 
-        LEFT_SPACER.setSize(40, 320);
-        RIGHT_SPACER.setSize(40, 320);
+        LEFT_SPACER.setPreferredSize(SPACER_SIZE);
+        RIGHT_SPACER.setPreferredSize(SPACER_SIZE);
 
         LEFT_SPACER.setOpaque(false);
         RIGHT_SPACER.setOpaque(false);
@@ -65,6 +53,7 @@ public class BoardSpace extends JPanel
         add(LEFT_SPACER);
         add(board);
         add(RIGHT_SPACER);
+        System.out.println("ActualSize: " + LEFT_SPACER.getSize());
     }
 
 }
