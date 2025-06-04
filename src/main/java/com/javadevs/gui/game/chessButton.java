@@ -66,6 +66,6 @@ public class chessButton extends JButton
     {
         System.out.println("Getting piece for position: " + intY + ", " + intX);
         System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
-        return arrayHandler.position[intY][intX]; // Get the piece from the game handler's position array
+        return arrayHandler.position[intX][intY]; // Get the piece from the game handler's position array
     }
 }
