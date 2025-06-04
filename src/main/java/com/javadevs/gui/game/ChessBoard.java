@@ -5,11 +5,13 @@ import com.javadevs.ChessGameHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class ChessBoard extends JPanel
 {
@@ -42,12 +44,13 @@ public class ChessBoard extends JPanel
         setLayout(new GridLayout(8, 8));
 
         BUTTON_SIZE = BOARD_WIDTH / 8; // Since it's an 8x8 grid, divide the panel size by 8
-        boardInit();
+        boardInit(arrayHandler);
 
         //set_debug_board_labels(arrayHandler); // Set debug labels for the buttons
     }
     
-    public void boardInit()
+    public void boardInit(ChessGameHandler arrayHandler)
+ 
     {
       BUTTON_COUNT = 0;
       column_init("a");
@@ -58,6 +61,7 @@ public class ChessBoard extends JPanel
       column_init("f");
       column_init("g");
       column_init("h");
+      set_test_icons(arrayHandler);
     }
 
   public void column_init(String column)
@@ -108,5 +112,24 @@ public class ChessBoard extends JPanel
     }
   }
 
+  public void set_test_icons(ChessGameHandler arrayHandler)
+  {
+    try {
+        // Load the image only once
+
+
+        for (chessButton button : BUTTON_LIST) 
+        {
+            String PIECE_BUFFER = button.getPiece(arrayHandler); // Get the piece from the game handler's position array
+            BufferedImage img = ImageIO.read(getClass().getResource("/" + PIECE_BUFFER + ".png"));
+            Image scaledImg = img.getScaledInstance(BUTTON_SIZE, BUTTON_SIZE, Image.SCALE_SMOOTH);
+            ImageIcon icon = new ImageIcon(scaledImg);
+            button.setIcon(icon);
+            button.setText(PIECE_BUFFER); // Optionally clear text
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+  }
 
 }

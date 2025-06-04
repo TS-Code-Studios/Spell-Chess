@@ -8,6 +8,8 @@ import java.awt.Color;
 
 import javax.swing.JButton;
 
+import com.javadevs.ChessGameHandler;
+
 public class chessButton extends JButton
 {
     String name;
@@ -16,6 +18,9 @@ public class chessButton extends JButton
     int intX;
     int intY;
     public String color;
+
+    Color DARK_PIECE_COLOR = new Color(189, 147, 216);
+    Color LIGHT_PIECE_COLOR = new Color(222, 210, 232);
     
     public chessButton(String posXNew, String posYNew)
     {
@@ -43,17 +48,24 @@ public class chessButton extends JButton
         if (sum % 2 == 0) 
         {
             color = "black";
-            this.setBackground(Color.BLACK); // Set the button background color to black
+            this.setBackground(DARK_PIECE_COLOR); // Set the button background color to black
         } 
         else 
         {
             color = "white";
-            this.setBackground(Color.WHITE); // Set the button background color to white
+            this.setBackground(LIGHT_PIECE_COLOR); // Set the button background color to white
         }
     }
 
     public void loadSquareColor(String colorSet)
     {
         setBackground(Color.BLACK);
+    }
+
+    public String getPiece(ChessGameHandler arrayHandler) 
+    {
+        System.out.println("Getting piece for position: " + intY + ", " + intX);
+        System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
+        return arrayHandler.position[intY][intX]; // Get the piece from the game handler's position array
     }
 }
