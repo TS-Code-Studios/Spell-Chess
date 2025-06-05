@@ -3,8 +3,8 @@ A chess variation with different spells to use during games, similar to the exis
 Update: Spell Chess has been cancelled, just finishing regular chess and then propably abandoning this.
 
 # Developers
-- **Simon Korten/simonkdev:** Frontend coding and graphic design.
-- **Theodor Römpp/FRBF Studios:** Backend coding and class management.
+- **Simon Korten/simonkdev:** Frontend development and graphic design.
+- **Theodor Römpp/FRBF Studios:** Backend development.
 
 # Roadmap
 Cursive things are already done.
