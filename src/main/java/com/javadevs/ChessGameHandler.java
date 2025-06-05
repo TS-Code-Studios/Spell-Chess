@@ -116,14 +116,14 @@ public class ChessGameHandler {
     private void newDefaultPosition() {
         //position array is filled with the default chess position (Uppercase = black pieces, lowercase = white pieces, board is inverted to make the first rank row 0)
         position = new char[][] {
-                {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+    /*a1*/      {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}, //h1
                 {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
                 {'-', '-', '-', '-', '-', '-', '-', '-'},
                 {'-', '-', '-', '-', '-', '-', '-', '-'},
                 {'-', '-', '-', '-', '-', '-', '-', '-'},
                 {'-', '-', '-', '-', '-', '-', '-', '-'},
                 {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-                {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+    /*a8*/      {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'} //h8
         };
 
         // coverageMap array is filled with dashes ("-" = uncovered, "[" = covered by white, "]" = covered by black, "%" = covered by both sides)

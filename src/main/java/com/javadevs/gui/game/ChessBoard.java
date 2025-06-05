@@ -54,7 +54,7 @@ public class ChessBoard extends JPanel
     {
       BUTTON_COUNT = 0;
       column_init("a", 7);
-      column_init("b",6);
+      column_init("b", 6);
       column_init("c", 5);
       column_init("d", 4);
       column_init("e", 3);
@@ -86,14 +86,15 @@ public class ChessBoard extends JPanel
         {
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println(target.posY + target.posX);
+                System.out.println(target.posX + target.posY);
             }
         };
     target.addActionListener(ON_BUTTON_CLICK);
-    target.convertPosition(target.posY + target.posX); // Convert the position to numeric values for array access
+    target.convertPosition(); // Convert the position to numeric values for array access
     target.setSquareColor();
     target.setFocusPainted(false);
     target.setBorderPainted(false);    
+    System.out.println("[DEBUGG] BUTTON NAME: " + target.name);
   }
 
 
