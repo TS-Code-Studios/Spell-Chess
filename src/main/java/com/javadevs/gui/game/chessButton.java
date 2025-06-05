@@ -62,7 +62,7 @@ public class chessButton extends JButton
         setBackground(Color.BLACK);
     }
 
-    public String getPiece(ChessGameHandler arrayHandler) 
+    public char getPiece(ChessGameHandler arrayHandler) 
     {
         System.out.println("Getting piece for position: " + intY + ", " + intX);
         System.out.println("Piece is: " + arrayHandler.position[intY][intX]);

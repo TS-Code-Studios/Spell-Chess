@@ -96,21 +96,6 @@ public class ChessBoard extends JPanel
     target.setBorderPainted(false);    
   }
 
-  public void set_debug_button_labels(ChessGameHandler arrayHandler, chessButton button)
-  {
-    String piece = arrayHandler.position[button.intX][button.intY];
-    
-    button.setText(piece); // Set the button label to the piece name
-  
-  }
-
-  public void set_global_debug_labels(ChessGameHandler arrayHandler) // WRAPPER FOR SETTING DEBUG LABELS
-  {
-    for (chessButton button : BUTTON_LIST) 
-    {
-      set_debug_button_labels(arrayHandler, button);
-    }
-  }
 
   public void set_test_icons(ChessGameHandler arrayHandler)
   {
@@ -120,8 +105,8 @@ public class ChessBoard extends JPanel
 
         for (chessButton button : BUTTON_LIST) 
         {
-            String PIECE_BUFFER = button.getPiece(arrayHandler); // Get the piece from the game handler's position array
-            if(PIECE_BUFFER != "-")
+            char PIECE_BUFFER = button.getPiece(arrayHandler); // Get the piece from the game handler's position array
+            if(PIECE_BUFFER !=('-'))
             {
             BufferedImage img = ImageIO.read(getClass().getResource("/" + PIECE_BUFFER + ".png"));
             Image scaledImg = img.getScaledInstance(BUTTON_SIZE, BUTTON_SIZE, Image.SCALE_SMOOTH);

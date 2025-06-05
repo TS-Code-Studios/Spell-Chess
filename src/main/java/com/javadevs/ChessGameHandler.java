@@ -32,8 +32,8 @@ public class ChessGameHandler {
     private final List<Character> EMPTY_SQUARES = Arrays.asList('-', '[', ']', '%');
     // All attributes are private for the sake of encapsulation
 
-    private char[][] position;
-    private char[][] coverageMap;
+    public char[][] position;
+    public char[][] coverageMap;
 
 
     private boolean[] castlingWhiteInfo, castlingBlackInfo;
