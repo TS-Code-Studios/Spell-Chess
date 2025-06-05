@@ -31,8 +31,10 @@ public class ChessGameHandler {
     private static char playerToMove = 'w';
     private final List<Character> EMPTY_SQUARES = Arrays.asList('-', '[', ']', '%');
     // All attributes are private for the sake of encapsulation
+
     private char[][] position;
     private char[][] coverageMap;
+
 
     private boolean[] castlingWhiteInfo, castlingBlackInfo;
 
