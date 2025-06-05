@@ -22,18 +22,19 @@ public class chessButton extends JButton
     Color DARK_PIECE_COLOR = new Color(189, 147, 216);
     Color LIGHT_PIECE_COLOR = new Color(222, 210, 232);
     
-    public chessButton(String posXNew, String posYNew)
+    public chessButton(String posXNew, String posYNew, int intHelper)
     {
         name = "button" + posXNew + posYNew;
         posY = posXNew;
         posX = posYNew;
+        intX = intHelper; // This is used to set the position in the 2D array
         //2D array position[][] from ChessGameHandler.java has format position[y][x]
     }
     
     public void convertPosition(String pos)                  //CONVERTS POSITION TO NUMERIC VALUE FOR LATER COLOR CALCULATION
-    {
-        intX = pos.charAt(0) - 'a'; 	        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
-        intY = Character.getNumericValue(pos.charAt(1)) - 1; 		// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
+    {        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
+        intY = Character.getNumericValue(pos.charAt(1)) - 1; 	
+        System.out.println("Converted intY: " + intY)	;// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
     }
 
 
@@ -57,15 +58,11 @@ public class chessButton extends JButton
         }
     }
 
-    public void loadSquareColor(String colorSet)
-    {
-        setBackground(Color.BLACK);
-    }
-
     public char getPiece(ChessGameHandler arrayHandler) 
     {
-        System.out.println("Getting piece for position: " + intY + ", " + intX);
-        System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
+
+        System.out.println("Getting piece for position: " + intX + ", " + intY);
+        System.out.println("Piece is: " + arrayHandler.position[intX][intY]);
         return arrayHandler.position[intX][intY]; // Get the piece from the game handler's position array
     }
 }

@@ -8,3 +8,8 @@
 - piece rendering (font?)
 
 --> fontforge.org
+
+
+wenn spieler weiß oben links a8
+
+wenn spieler schwarz oben links h1

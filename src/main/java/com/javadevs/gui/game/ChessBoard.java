@@ -29,7 +29,7 @@ public class ChessBoard extends JPanel
         BUTTON_LIST = new ArrayList<>();
         
         BUTTON_COUNT = 0;
-        CURRENT_ROW = 1; // Reset countRow for the first column
+        CURRENT_ROW = 8 ; // Reset countRow for the first column
         
         BOARD_SIZE = new Dimension(320, 320); // Set the size of the board
         BOARD_WIDTH = BOARD_SIZE.width; // Store the true width of the board
@@ -53,29 +53,29 @@ public class ChessBoard extends JPanel
  
     {
       BUTTON_COUNT = 0;
-      column_init("a");
-      column_init("b");
-      column_init("c");
-      column_init("d");
-      column_init("e");
-      column_init("f");
-      column_init("g");
-      column_init("h");
+      column_init("a", 7);
+      column_init("b",6);
+      column_init("c", 5);
+      column_init("d", 4);
+      column_init("e", 3);
+      column_init("f", 2);
+      column_init("g", 1);
+      column_init("h", 0);
       set_test_icons(arrayHandler);
     }
 
-  public void column_init(String column)
+  public void column_init(String column, int columnIndex)
     {
       for(int i=0; i<8; i++)
     {
-      chessButton button = new chessButton( column, String.valueOf(CURRENT_ROW));
+      chessButton button = new chessButton( column, String.valueOf(CURRENT_ROW), columnIndex);
       button_config(button);
       BUTTON_LIST.add(button);
       this.add(button);
-      CURRENT_ROW++;
+      CURRENT_ROW--;
       BUTTON_COUNT++;
     }
-    CURRENT_ROW = 1;
+    CURRENT_ROW = 8;
   }
 
   
@@ -87,10 +87,10 @@ public class ChessBoard extends JPanel
             public void actionPerformed(ActionEvent e) 
             {
                 System.out.println(target.posY + target.posX);
-                System.out.println(target.getSize()); // Print the position of the button
             }
         };
     target.addActionListener(ON_BUTTON_CLICK);
+    target.convertPosition(target.posY + target.posX); // Convert the position to numeric values for array access
     target.setSquareColor();
     target.setFocusPainted(false);
     target.setBorderPainted(false);    

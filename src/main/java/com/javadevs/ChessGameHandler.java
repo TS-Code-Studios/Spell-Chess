@@ -784,4 +784,5 @@ public class ChessGameHandler {
     public char getPlayerToMove() {
         return playerToMove;
     }
+
 }
