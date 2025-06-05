@@ -121,12 +121,15 @@ public class ChessBoard extends JPanel
         for (chessButton button : BUTTON_LIST) 
         {
             String PIECE_BUFFER = button.getPiece(arrayHandler); // Get the piece from the game handler's position array
+            if(PIECE_BUFFER != "-")
+            {
             BufferedImage img = ImageIO.read(getClass().getResource("/" + PIECE_BUFFER + ".png"));
             Image scaledImg = img.getScaledInstance(BUTTON_SIZE, BUTTON_SIZE, Image.SCALE_SMOOTH);
             ImageIcon icon = new ImageIcon(scaledImg);
             button.setIcon(icon);
-            button.setText(PIECE_BUFFER); // Optionally clear text
-        }
+            button.setText(""); // Optionally clear text
+            }
+          }
     } catch (Exception e) {
         e.printStackTrace();
     }

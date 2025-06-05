@@ -48,12 +48,12 @@ public class chessButton extends JButton
         if (sum % 2 == 0) 
         {
             color = "black";
-            this.setBackground(DARK_PIECE_COLOR); // Set the button background color to black
+            this.setBackground(LIGHT_PIECE_COLOR); // Set the button background color to black
         } 
         else 
         {
             color = "white";
-            this.setBackground(LIGHT_PIECE_COLOR); // Set the button background color to white
+            this.setBackground(DARK_PIECE_COLOR); // Set the button background color to white
         }
     }
 
