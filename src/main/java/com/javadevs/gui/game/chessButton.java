@@ -67,3 +67,9 @@ public class chessButton extends JButton
         return arrayHandler.position[intX][intY]; // Get the piece from the game handler's position array
     }
 }
+//Franklin was right
+//Why are you reading this?
+// Go back
+//          Stop
+//                  what the fuck
+// kasjdnkjewfkjn 
