@@ -62,9 +62,9 @@ public class chessButton extends JButton
     public char getPiece(ChessGameHandler arrayHandler) 
     {
 
-        System.out.println("Getting piece for position: " + intX + ", " + intY + ", For button: " + name);
-        System.out.println("Piece is: " + arrayHandler.position[intX][intY]);
-        return arrayHandler.position[intX][intY]; // Get the piece from the game handler's position array
+        System.out.println("Getting piece for position: " + intY + ", " + intX + ", For button: " + name);
+        System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
+        return arrayHandler.position[intY][intX]; // Get the piece from the game handler's position array
     }
 }
 //Franklin was right

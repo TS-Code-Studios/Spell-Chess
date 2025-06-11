@@ -53,18 +53,18 @@ public class ChessBoard extends JPanel
  
     {
       BUTTON_COUNT = 0;
-      column_init("a", 7);
-      column_init("b", 6);
-      column_init("c", 5);
-      column_init("d", 4);
-      column_init("e", 3);
-      column_init("f", 2);
-      column_init("g", 1);
-      column_init("h", 0);
+      row_init("a", 7);
+      row_init("b", 6);
+      row_init("c", 5);
+      row_init("d", 4);
+      row_init("e", 3);
+      row_init("f", 2);
+      row_init("g", 1);
+      row_init("h", 0);
       set_test_icons(arrayHandler);
     }
 
-  public void column_init(String column, int columnIndex)
+  public void row_init(String column, int columnIndex)
     {
       for(int i=0; i<8; i++)
     {
@@ -118,6 +118,22 @@ public class ChessBoard extends JPanel
           }
     } catch (Exception e) {
         e.printStackTrace();
+    }
+  }
+
+  public String get_latin_value(int column)
+  {
+    switch (column) 
+    {
+      case 0: return "a";
+      case 1: return "b";
+      case 2: return "c";
+      case 3: return "d";
+      case 4: return "e";
+      case 5: return "f";
+      case 6: return "g";
+      case 7: return "h";
+      default: return "";
     }
   }
 
