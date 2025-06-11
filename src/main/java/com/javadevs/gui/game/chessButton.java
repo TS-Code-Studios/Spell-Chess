@@ -13,7 +13,7 @@ import com.javadevs.ChessGameHandler;
 public class chessButton extends JButton
 {
     String name;
-    String posY;
+    int posY;
     String posX;
     int intX;
     int intY;
@@ -22,9 +22,9 @@ public class chessButton extends JButton
     Color DARK_PIECE_COLOR = new Color(189, 147, 216);
     Color LIGHT_PIECE_COLOR = new Color(222, 210, 232);
     
-    public chessButton(String posXNew, String posYNew, int intHelper)
+    public chessButton(String posXNew, int posYNew)
     {
-        name = "button" + posXNew + posYNew;
+        name = "button" + posXNew + (posYNew + 1);
         posX = posXNew;
         posY = posYNew;
         //intX = intHelper; // This is used to set the position in the 2D array
@@ -35,7 +35,7 @@ public class chessButton extends JButton
     {        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
         intX = Character.getNumericValue(posX.charAt(0)) - 10; // Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
         System.out.println("Converted intX: " + intX); // Debugging output to check the conversion
-        intY = Character.getNumericValue(posY.charAt(0)) - 1; 	
+        intY = posY;	
         System.out.println("Converted intY: " + intY)	;// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
     }
 

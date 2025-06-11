@@ -53,22 +53,22 @@ public class ChessBoard extends JPanel
  
     {
       BUTTON_COUNT = 0;
-      row_init("a", 7);
-      row_init("b", 6);
-      row_init("c", 5);
-      row_init("d", 4);
-      row_init("e", 3);
-      row_init("f", 2);
-      row_init("g", 1);
-      row_init("h", 0);
+      row_init( 7);
+      row_init( 6);
+      row_init( 5);
+      row_init( 4);
+      row_init( 3);
+      row_init( 2);
+      row_init( 1);
+      row_init( 0);
       set_test_icons(arrayHandler);
     }
 
-  public void row_init(String column, int columnIndex)
+  public void row_init(int rowIndex)
     {
       for(int i=0; i<8; i++)
     {
-      chessButton button = new chessButton( column, String.valueOf(CURRENT_ROW), columnIndex);
+      chessButton button = new chessButton(get_latin_value(i), rowIndex);
       button_config(button);
       BUTTON_LIST.add(button);
       this.add(button);
@@ -86,7 +86,7 @@ public class ChessBoard extends JPanel
         {
             public void actionPerformed(ActionEvent e) 
             {
-                System.out.println(target.posX + target.posY);
+                System.out.println(target.posX + (target.posY + 1));
             }
         };
     target.addActionListener(ON_BUTTON_CLICK);
