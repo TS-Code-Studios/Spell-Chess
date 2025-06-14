@@ -785,4 +785,7 @@ public class ChessGameHandler {
         return playerToMove;
     }
 
+    public char switchPlayerToMove() {
+        playerToMove = Character.isLowerCase(playerToMove) ? 'B' : 'w';
+    }
 }
