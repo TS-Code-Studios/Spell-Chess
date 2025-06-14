@@ -214,6 +214,7 @@ public class ChessBoard extends JPanel
     if( arrayHandler.isMovePossible(currentPieceString, origin.name, target.name, true)) 
     {
       arrayHandler.makeMove(currentPieceString, origin.name, target.name, false, 'a'); // Perform the move
+      arrayHandler.switchPlayerToMove();
       // set_test_icons(arrayHandler);
     }
     else 
