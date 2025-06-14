@@ -37,9 +37,9 @@ public class chessButton extends JButton
     public void convertPosition()                  //CONVERTS POSITION TO NUMERIC VALUE FOR LATER COLOR CALCULATION
     {        					// Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
         intX = Character.getNumericValue(posX.charAt(0)) - 10; // Convert column letter to number (0-based), meaning a=0, b=1, c=2, ...
-        System.out.println("Converted intX: " + intX); // Debugging output to check the conversion
+        // System.out.println("Converted intX: " + intX); // Debugging output to check the conversion
         intY = posY;	
-        System.out.println("Converted intY: " + intY)	;// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
+        // System.out.println("Converted intY: " + intY)	;// Convert row number to 0-based index, meaning 1=0, 2=1, 3=2, ...
     }
 
 
@@ -65,8 +65,8 @@ public class chessButton extends JButton
     public char getPiece(ChessGameHandler arrayHandler) 
     {
 
-        System.out.println("Getting piece for position: " + intY + ", " + intX + ", For button: " + name);
-        System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
+        // System.out.println("Getting piece for position: " + intY + ", " + intX + ", For button: " + name);
+        // System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
         return arrayHandler.position[intY][intX]; // Get the piece from the game handler's position array
     }
 

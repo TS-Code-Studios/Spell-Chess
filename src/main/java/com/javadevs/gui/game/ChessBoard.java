@@ -92,6 +92,19 @@ public class ChessBoard extends JPanel
             public void actionPerformed(ActionEvent e) 
             {
                 System.out.println(target.posX + (target.posY + 1));
+                if (target.isPossibleMoveTarget)
+                {
+                    System.out.println("Possible move target clicked: " + target.name);
+                    if (LAST_SELECTION_BUFFER != null) 
+                    {
+                        make_move(LAST_SELECTION_BUFFER, target, GAME_HANDLER); // Make the move if valid
+                    }
+                } 
+                else 
+                {
+                    System.out.println("Button clicked: " + target.name);
+                    set_button_selected(target, true); // Highlight the selected button
+                }
                 remove_target_highlights();
                 show_possible_targets(target, GAME_HANDLER);
             }
@@ -148,6 +161,7 @@ public class ChessBoard extends JPanel
   public void show_possible_targets(chessButton origin, ChessGameHandler arrayHandler)
   {
     set_button_selected(origin, true);
+    origin.isPossibleMoveTarget = true; // Mark the origin button as a possible move target
     LAST_SELECTION_BUFFER = origin; // Store the last selected button for reference
     for (chessButton button : BUTTON_LIST) 
     {
@@ -157,10 +171,10 @@ public class ChessBoard extends JPanel
             // Check if the button is a valid target for the piece at the origin
             if (arrayHandler.isMovePossible(currentPieceString, origin.name, button.name, true)) // Replace "a1" and "a3" with actual positions
             {
-                button.setText("Hi");
+                button.setText("⬤");
                 button.isPossibleMoveTarget = true; // Mark the button as a possible move target
             } 
-            else 
+            else  
             {
                 button.setBorder(BorderFactory.createEmptyBorder()); // Remove highlight for invalid targets
                 button.isPossibleMoveTarget = false; // Mark the button as not a possible move target
@@ -201,10 +215,12 @@ public class ChessBoard extends JPanel
     if( arrayHandler.isMovePossible(currentPieceString, origin.name, target.name, true)) 
     {
       arrayHandler.makeMove(currentPieceString, origin.name, target.name, false, 'a'); // Perform the move
+      // set_test_icons(arrayHandler);
     }
     else 
     {
       System.out.println("Invalid move from " + origin.name + " to " + target.name);
+      // set_test_icons(arrayHandler);
     }
     set_test_icons(arrayHandler); // Reload icons after the move
   }
