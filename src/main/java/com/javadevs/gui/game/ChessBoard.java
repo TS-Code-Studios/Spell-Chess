@@ -121,21 +121,20 @@ public class ChessBoard extends JPanel
   public void set_test_icons(ChessGameHandler arrayHandler)
   {
     try {
-        // Load the image only once
-
-
         for (chessButton button : BUTTON_LIST) 
         {
             char PIECE_BUFFER = button.getPiece(arrayHandler); // Get the piece from the game handler's position array
-            if(PIECE_BUFFER !=('-'))
-            {
-            BufferedImage img = ImageIO.read(getClass().getResource("/" + PIECE_BUFFER + ".png"));
-            Image scaledImg = img.getScaledInstance(BUTTON_SIZE, BUTTON_SIZE, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(scaledImg);
-            button.setIcon(icon);
-            button.setText(""); // Optionally clear text
+            if (PIECE_BUFFER != '-') {
+                BufferedImage img = ImageIO.read(getClass().getResource("/" + PIECE_BUFFER + ".png"));
+                Image scaledImg = img.getScaledInstance(BUTTON_SIZE, BUTTON_SIZE, Image.SCALE_SMOOTH);
+                ImageIcon icon = new ImageIcon(scaledImg);
+                button.setIcon(icon);
+                button.setText(""); // Optionally clear text
+            } else {
+                button.setIcon(null); // <-- Clear icon if no piece
+                button.setText("");   // Optionally clear text
             }
-          }
+        }
     } catch (Exception e) {
         e.printStackTrace();
     }
