@@ -22,7 +22,11 @@ public class ChessBoard extends JPanel
 
     public Dimension BOARD_SIZE;
 
+    ChessGameHandler GAME_HANDLER;
+
     int BOARD_WIDTH;
+
+    chessButton LAST_SELECTION_BUFFER;
 
     public ChessBoard(ChessGameHandler arrayHandler) 
     {
@@ -33,7 +37,8 @@ public class ChessBoard extends JPanel
         
         BOARD_SIZE = new Dimension(320, 320); // Set the size of the board
         BOARD_WIDTH = BOARD_SIZE.width; // Store the true width of the board
-        
+        GAME_HANDLER = arrayHandler; // Store the game handler for later use
+
         setBackground(Color.LIGHT_GRAY);
         setMinimumSize(BOARD_SIZE);
         setMaximumSize(BOARD_SIZE);
@@ -87,6 +92,8 @@ public class ChessBoard extends JPanel
             public void actionPerformed(ActionEvent e) 
             {
                 System.out.println(target.posX + (target.posY + 1));
+                remove_target_highlights();
+                show_possible_targets(target, GAME_HANDLER);
             }
         };
     target.addActionListener(ON_BUTTON_CLICK);
@@ -135,6 +142,71 @@ public class ChessBoard extends JPanel
       case 7: return "h";
       default: return "";
     }
+  }
+
+
+  public void show_possible_targets(chessButton origin, ChessGameHandler arrayHandler)
+  {
+    set_button_selected(origin, true);
+    LAST_SELECTION_BUFFER = origin; // Store the last selected button for reference
+    for (chessButton button : BUTTON_LIST) 
+    {
+        if (button != origin) // Avoid highlighting the origin button
+        {
+            String currentPieceString = Character.toString(origin.getPiece(arrayHandler)); // Get the piece at the current button
+            // Check if the button is a valid target for the piece at the origin
+            if (arrayHandler.isMovePossible(currentPieceString, origin.name, button.name, true)) // Replace "a1" and "a3" with actual positions
+            {
+                button.setText("Hi");
+                button.isPossibleMoveTarget = true; // Mark the button as a possible move target
+            } 
+            else 
+            {
+                button.setBorder(BorderFactory.createEmptyBorder()); // Remove highlight for invalid targets
+                button.isPossibleMoveTarget = false; // Mark the button as not a possible move target
+            }
+        }
+    }
+  }
+
+  public void remove_target_highlights()
+  {
+    if (LAST_SELECTION_BUFFER != null) 
+    {
+        set_button_selected(LAST_SELECTION_BUFFER, false); // Deselect the last selected button
+    }
+    for (chessButton button : BUTTON_LIST) 
+    {
+        button.setText(""); // Clear the text to remove highlights
+        button.setBorder(BorderFactory.createEmptyBorder()); // Remove any border highlights
+    }
+  }
+
+  public void set_button_selected(chessButton target, boolean selected) 
+  {
+    target.isSelected = selected; // Set the selection state of the button
+    if (selected) 
+    {
+        target.setBackground(Color.YELLOW); // Change background color to indicate selection
+    } 
+    else 
+    {
+        target.setSquareColor(); // Reset to original color
+    }
+  }
+
+  public void make_move(chessButton origin, chessButton target, ChessGameHandler arrayHandler) 
+  {
+    String currentPieceString = Character.toString(origin.getPiece(arrayHandler)); // Get the piece at the origin button
+    if( arrayHandler.isMovePossible(currentPieceString, origin.name, target.name, true)) 
+    {
+      arrayHandler.makeMove(currentPieceString, origin.name, target.name, false, 'a'); // Perform the move
+    }
+    else 
+    {
+      System.out.println("Invalid move from " + origin.name + " to " + target.name);
+    }
+    set_test_icons(arrayHandler); // Reload icons after the move
   }
 
 }

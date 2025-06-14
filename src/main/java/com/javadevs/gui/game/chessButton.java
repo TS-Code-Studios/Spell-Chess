@@ -21,10 +21,13 @@ public class chessButton extends JButton
 
     Color DARK_PIECE_COLOR = new Color(189, 147, 216);
     Color LIGHT_PIECE_COLOR = new Color(222, 210, 232);
+
+    boolean isSelected = false; // Variable to track if the button is selected
+    boolean isPossibleMoveTarget = false; // Variable to track if the button is a possible move target
     
     public chessButton(String posXNew, int posYNew)
     {
-        name = "button" + posXNew + (posYNew + 1);
+        name = posXNew + (posYNew + 1);
         posX = posXNew;
         posY = posYNew;
         //intX = intHelper; // This is used to set the position in the 2D array
@@ -66,6 +69,7 @@ public class chessButton extends JButton
         System.out.println("Piece is: " + arrayHandler.position[intY][intX]);
         return arrayHandler.position[intY][intX]; // Get the piece from the game handler's position array
     }
+
 }
 //Franklin was right
 //Why are you reading this?
