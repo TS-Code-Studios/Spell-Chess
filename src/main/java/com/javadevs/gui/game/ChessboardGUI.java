@@ -69,7 +69,7 @@ public class ChessboardGUI extends JFrame
 
   private void addWithConstraints(java.awt.Component comp, int gridy, int height, boolean isSpacer) {
     GridBagConstraints gbc = configureConstraints(gridy, isSpacer);
-    comp.setPreferredSize(new Dimension(FRAME_SIZE.width, height));
+   comp.setPreferredSize(new Dimension(FRAME_SIZE.width, height));
     getContentPane().add(comp, gbc);
   }
 
@@ -87,9 +87,9 @@ public class ChessboardGUI extends JFrame
   public void init_spacer_sizes()
   {
     double VERTICAL_SPACING_BUFFER = 0.5 * (FRAME_SIZE.height - (board.BOARD_SIZE.height + topBar.BAR_HEIGHT + bottomBar.BAR_HEIGHT));
-    System.out.println("Vertical spacing buffer: " + VERTICAL_SPACING_BUFFER);
+    // System.out.println("Vertical spacing buffer: " + VERTICAL_SPACING_BUFFER);
     int VERTICAL_SPACING = (int) VERTICAL_SPACING_BUFFER;
-    System.out.println("Vertical spacing: " + VERTICAL_SPACING);
+    // System.out.println("Vertical spacing: " + VERTICAL_SPACING);
 
     BOTTOM_SPACER_SIZE = new Dimension(FRAME_SIZE.width, VERTICAL_SPACING);
     TOP_SPACER_SIZE = new Dimension(FRAME_SIZE.width, VERTICAL_SPACING);
