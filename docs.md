@@ -25,3 +25,7 @@ This method does NOT check whether the move is possible, so make sure everything
 **`boolean isMovePossible(@NotNull String piece, @NotNull String startSquare, @NotNull String targetSquare, boolean notSimulated)`**\
 Checks if the move entered is possible in the current position. This currently accounts for everything except en passant.\
 A valid input would be: `isMovePossible(p [account for capitalisation here!] e2 e4 true)`. The last parameter is only relevant for internal methods of the `chessGameHandler` and should usually be true when accessing the method from outside; setting it to `false` will allow moves that put/leave the king in check and also ignore what player is making the move. It will also skip logging the result at the end of the method.
+
+**`boolean legalMovesLeft()`**\
+Returns true if the player that is currently to move has any legal moves left. Recommended using directly after the player is switched.\
+If this returns true and the player to move is in check, it's a checkmate, if this returns true but nobody is in check, it's a stalemate (see `ChessGameHandler` `main`method for example implementation.)

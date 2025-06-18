@@ -32,3 +32,6 @@ public class BasicBackgroundPanel extends JPanel
         return new Dimension(background.getWidth(this), background.getHeight(this));
     }
 }
+
+//What happens to a child who isnt loved properly?
+// I dunno, my parents always did a great job :)
