@@ -1,6 +1,5 @@
 package com.javadevs.gui;
 
-import com.javadevs.gui.game.ChessboardGUI;
 import com.javadevs.gui.main.MainMenuGUI;
 
 
@@ -15,6 +14,7 @@ public class guiTest {
         // ChessboardGUI MAIN_WINDOW = new ChessboardGUI();
         // MAIN_WINDOW.init_main_window();
         MainMenuGUI MAIN_WINDOW = new MainMenuGUI();
+        System.out.println(MAIN_WINDOW.FRAME_HEIGHT);
     }
 
 }

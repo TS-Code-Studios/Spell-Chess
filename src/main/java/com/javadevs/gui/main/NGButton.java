@@ -4,10 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.DigestException;
 
 import com.javadevs.gui.game.ChessboardGUI;
-import com.javadevs.gui.main.*;
+
 
 public class NGButton extends JButton
 {

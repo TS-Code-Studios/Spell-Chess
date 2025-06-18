@@ -32,6 +32,7 @@ public class chessButton extends JButton
         posY = posYNew;
         //intX = intHelper; // This is used to set the position in the 2D array
         //2D array position[][] from ChessGameHandler.java has format position[y][x]
+        setFocusPainted(false);
     }
     
     public void convertPosition()                  //CONVERTS POSITION TO NUMERIC VALUE FOR LATER COLOR CALCULATION

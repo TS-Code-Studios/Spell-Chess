@@ -105,7 +105,9 @@ public class ChessBoard extends JPanel
                     System.out.println("Button clicked: " + target.name);
                     set_button_selected(target, true); // Highlight the selected button
                 }
+                System.out.println("REACHED DEBUG POINT PRE-A");
                 remove_target_highlights();
+                System.out.println("REACHED DEBUG POINT A");
                 show_possible_targets(target, GAME_HANDLER);
             }
         };
@@ -170,8 +172,15 @@ public class ChessBoard extends JPanel
             // Check if the button is a valid target for the piece at the origin
             if (arrayHandler.isMovePossible(currentPieceString, origin.name, button.name, true)) // Replace "a1" and "a3" with actual positions
             {
+              if (button.getPiece(arrayHandler) != '-') 
+              {
+                button.setBackground(Color.RED);
+              }
+              else
+              {
                 button.setText("⬤");
                 button.isPossibleMoveTarget = true; // Mark the button as a possible move target
+              }
             } 
             else  
             {
@@ -192,6 +201,7 @@ public class ChessBoard extends JPanel
     {
         button.setText(""); // Clear the text to remove highlights
         button.setBorder(BorderFactory.createEmptyBorder()); // Remove any border highlights
+        button.setSquareColor();
     }
   }
 
@@ -200,7 +210,10 @@ public class ChessBoard extends JPanel
     target.isSelected = selected; // Set the selection state of the button
     if (selected) 
     {
-        target.setBackground(Color.YELLOW); // Change background color to indicate selection
+        if (target.getPiece(GAME_HANDLER) != '-')
+        {
+          target.setBackground(Color.YELLOW); // Change background color to indicate selection
+        }
     } 
     else 
     {
