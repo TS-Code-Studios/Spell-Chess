@@ -29,16 +29,16 @@ public class ChessGameHandler {
     final static char DOUBLE_COVERAGE_CHAR = '%';
 
     private static char playerToMove = 'w';
+
+    private static int enPassantTargetSquareRank, enPassantTargetSquareFile, movesSinceEnPassantOpportunity;
+    
     private static final List<Character> EMPTY_SQUARES = Arrays.asList('-', '[', ']', '%');
     // All attributes are private for the sake of encapsulation
 
     public char[][] position;
     public char[][] coverageMap;
-
-
     public boolean[] castlingWhiteInfo, castlingBlackInfo;
-
-
+    
     public ChessGameHandler() {
         newDefaultPosition();
     }
@@ -68,7 +68,7 @@ public class ChessGameHandler {
                     // If nobody is in check, it's a stalemate and thus a draw
                     else {
                         System.out.println("Stalemate! The game is a draw.");
-
+                        
                         System.exit(3);
                     }
                 }
@@ -84,6 +84,7 @@ public class ChessGameHandler {
 
                 //This will loop until a valid move is made
                 while (true) {
+                    
                     //The player input is read and stored as moveMade
                     moveMade = input.nextLine();
 
@@ -115,6 +116,8 @@ public class ChessGameHandler {
                         }
                         else {testGame.makeMove(moveComponents[PIECE_INDEX], moveComponents[START_SQUARE_INDEX], moveComponents[TARGET_SQUARE_INDEX], false, '-');}
 
+                        movesSinceEnPassantOpportunity++;
+                        
                         //System.out.println("DEBUG: Move made successfully.");
                         break;
 
@@ -128,7 +131,8 @@ public class ChessGameHandler {
                         System.out.println("Try again:");
                     }
                 }
-
+                if(movesSinceEnPassantOpportunity )
+                
                 //The player is switched
                 playerToMove = Character.isLowerCase(playerToMove) ? 'B' : 'w';
             }
@@ -326,7 +330,7 @@ public class ChessGameHandler {
         //Which piece is it?
         switch (piece.toLowerCase()) {
             //Is the piece a pawn?
-            case "p" -> isMovePossible = checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank);
+            case "p" -> isMovePossible = checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank, notSimulated);
 
             //Is the piece a knight?
             case "n" -> {
@@ -490,7 +494,7 @@ public class ChessGameHandler {
     }
 
     //Since pawn logic is extra weird, it is separated into a different method
-    private boolean checkPawnMove(String piece, int startSquareFile, int startSquareRank, int targetSquareFile, int targetSquareRank) {
+    private boolean checkPawnMove(String piece, int startSquareFile, int startSquareRank, int targetSquareFile, int targetSquareRank, boolean notSimulated) {
         boolean isPawnMovePossible = false;
 
         // Determine move direction and starting rank for pawns
@@ -510,6 +514,8 @@ public class ChessGameHandler {
                 int intermediateRank = startSquareRank + moveDirection;
                 if (EMPTY_SQUARES.contains(position[intermediateRank][targetSquareFile])) {
                     isPawnMovePossible = true;
+
+
                 } else {
                     System.err.println("DEBUG: Square in between is not empty.");
                 }
@@ -518,7 +524,8 @@ public class ChessGameHandler {
         // Is the pawn capturing a piece? (^ = XOR)
         else if ((startSquareFile - 1 == targetSquareFile ^ startSquareFile + 1 == targetSquareFile)
                 && startSquareRank + moveDirection == targetSquareRank
-                && ((Character.isUpperCase(position[targetSquareRank][targetSquareFile]) && Character.isLowerCase(piece.charAt(0))) || (Character.isLowerCase(position[targetSquareRank][targetSquareFile]) && Character.isUpperCase(piece.charAt(0))))) {
+                && ((Character.isUpperCase(position[targetSquareRank][targetSquareFile]) && Character.isLowerCase(piece.charAt(0))) || (Character.isLowerCase(position[targetSquareRank][targetSquareFile]) && Character.isUpperCase(piece.charAt(0)))
+                || (targetSquareRank == enPassantTargetSquareRank && targetSquareFile == enPassantTargetSquareFile))) {
             isPawnMovePossible = true;
         }
 
@@ -735,6 +742,31 @@ public class ChessGameHandler {
 
         // System.out.println("DEBUG: Player is not castling.");
         try {
+            int enPassantCaptureSquareRank;
+            if (piece.equals("p")) { // If the piece is a white pawn, check for exceptional moves
+                if((startSquareRank + 2) == targetSquareRank) { // If the pawn is moving 2 squares upward, set the ePTS accordingly
+                    enPassantTargetSquareRank = startSquareRank + 1;
+                    enPassantTargetSquareFile = targetSquareFile;
+
+                    movesSinceEnPassantOpportunity = 0;
+                } else if (EMPTY_SQUARES.contains(position[targetSquareRank][targetSquareFile])) { // If the target square is empty, it must be en passanting
+                    enPassantCaptureSquareRank = targetSquareRank - 1;
+                    position[enPassantCaptureSquareRank][targetSquareFile] = '-';
+                    return;
+                }
+            } else if (piece.equals("P")) { // If the piece is a black pawn, check for exceptional moves
+                if((startSquareRank - 2) == targetSquareRank) { // If the pawn is moving 2 squares downward, set the ePTS accordingly
+                    enPassantTargetSquareRank = startSquareRank - 1;
+                    enPassantTargetSquareFile = targetSquareFile;
+
+                    movesSinceEnPassantOpportunity = 0;
+                } else if (EMPTY_SQUARES.contains(position[targetSquareRank][targetSquareFile])) { // If the target square is empty, it must be en passanting
+                    enPassantCaptureSquareRank = targetSquareRank + 1;
+                    position[enPassantCaptureSquareRank][targetSquareFile] = '-';
+                    return;
+                }
+            }
+
             int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
             int startSquareRank = (startSquare.charAt(1) - '0') - 1;
 
@@ -742,7 +774,7 @@ public class ChessGameHandler {
             int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
 
             position[startSquareRank][startSquareFile] = EMPTY_SQUARE_CHAR;
-
+            
             // If the player is promoting, set the target square to the promotion piece, otherwise set it to the piece making the move
             if(isPromoting) {position[targetSquareRank][targetSquareFile] = promotionPiece;}
             else {position[targetSquareRank][targetSquareFile] = piece.charAt(0);}
