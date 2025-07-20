@@ -28,12 +28,18 @@ public class ChessGameHandler {
     final static char BLACK_COVERAGE_CHAR = ']';
     final static char DOUBLE_COVERAGE_CHAR = '%';
 
+    final static String PAWN = "p";
+    final static String KNIGHT = "n";
+    final static String ROOK = "r";
+    final static String QUEEN = "q";
+    final static String KING = "k";
+    final static String BISHOP = "b";
+
     private static char playerToMove = 'w';
 
     private static int enPassantTargetSquareRank, enPassantTargetSquareFile, movesSinceEnPassantOpportunity;
     
     private static final List<Character> EMPTY_SQUARES = Arrays.asList('-', '[', ']', '%');
-    // All attributes are private for the sake of encapsulation
 
     public char[][] position;
     public char[][] coverageMap;
@@ -43,7 +49,7 @@ public class ChessGameHandler {
         newDefaultPosition();
     }
 
-    //Main method starts a text-controlled test game
+    //Main method starts a CLI test game
     public static void main(String[] args) {
         ChessGameHandler testGame = new ChessGameHandler();
         String moveMade;
@@ -131,10 +137,10 @@ public class ChessGameHandler {
                         System.out.println("Try again:");
                     }
                 }
-                if(movesSinceEnPassantOpportunity )
+                // if(movesSinceEnPassantOpportunity )
                 
                 //The player is switched
-                playerToMove = Character.isLowerCase(playerToMove) ? 'B' : 'w';
+                // playerToMove = Character.isLowerCase(playerToMove) ? 'B' : 'w';
             }
         }
     }
@@ -172,14 +178,8 @@ public class ChessGameHandler {
     }
 
     private void updateCoveredSquares() {
-        // Reset the coverage map
-        for (int rank = 0; rank < 8; rank++) {
-            for (int file = 0; file < 8; file++) {
-                coverageMap[rank][file] = '-';
-            }
-        }
+        resetCoverageMap();
 
-        // Iterate through the coverage map
         for (int rank = 0; rank < 8; rank++) {
             for (int file = 0; file < 8; file++) {
                 String square = Character.toString((char) ('a' + file)) + (rank + 1);
@@ -193,8 +193,13 @@ public class ChessGameHandler {
         }
     }
 
-    // This method can check if a move is possible. So far, promotions and en passant are not included. For playerToMove, use "w" and "B" respectively.
-    // If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters.
+    private void resetCoverageMap() {
+        for (int rank = 0; rank < 8; rank++) {
+            for (int file = 0; file < 8; file++) {
+                coverageMap[rank][file] = '-';
+            }
+        }
+    }
 
     //Method for checking all the squares a piece can cover from a square
     //This needs to be run BEFORE the player to move is changed or before the castling availability is updated!
@@ -202,34 +207,11 @@ public class ChessGameHandler {
         // System.out.println("DEBUG: Piece is " + piece);
         if (piece == EMPTY_SQUARE_CHAR) {
             return;
-        } // Fail save
+        }
 
-        //Pawn squares are controlled differently
+        // Pawn squares are controlled differently
         if (Character.toLowerCase(piece) == 'p') {
-            // System.out.println("DEBUG: Piece is a pawn");
-            int squareFile = (square.charAt(0) - 'a' + 1) - 1;
-            int squareRank = (square.charAt(1) - '0') - 1;
-            // System.out.println("DEBUG: Translated file " + square.charAt(0) + " to integer " + squareFile);
-            // System.out.println("DEBUG: Translated rank " + square.charAt(1) + " to integer " + squareRank);
-
-            int rankUp = squareRank + 1;
-            int rankDown = squareRank - 1;
-            int fileLeft = squareFile - 1;
-            int fileRight = squareFile + 1;
-
-            // System.out.println("DEBUG: Squares to modify are rank " + rankUp + " file " + fileRight + " and rank " + rankUp + " file " + fileLeft);
-            // If the pawn is white
-            if (Character.isLowerCase(piece) && rankUp < 8) {
-                // These four outer if clauses are there to ensure the program isn't trying to access any squares outside the 8×8 board
-                if (fileRight < 8) {coverageMap[rankUp][fileRight] = replaceChar(coverageMap[rankUp][fileRight], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR); replaceChar(coverageMap[rankUp][fileRight], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
-                if (fileLeft > -1) {coverageMap[rankUp][fileLeft] = replaceChar(coverageMap[rankUp][fileLeft], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR); replaceChar(coverageMap[rankUp][fileLeft], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
-            }
-
-            // If the pawn is black
-            else if (Character.isUpperCase(piece) && rankDown > -1) {
-                if (fileRight < 8) {coverageMap[rankDown][fileRight] = replaceChar(coverageMap[rankDown][fileRight], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR); replaceChar(coverageMap[rankDown][fileRight], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
-                if (fileLeft > -1) {coverageMap[rankDown][fileLeft] = replaceChar(coverageMap[rankDown][fileLeft], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR); replaceChar(coverageMap[rankDown][fileLeft], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
-            }
+            simulatePawnCoverage(square, piece);
 
             return;
         }
@@ -278,6 +260,30 @@ public class ChessGameHandler {
         }
     }
 
+    private void simulatePawnCoverage(String square, char piece) {
+        int squareFile = (square.charAt(0) - 'a' + 1) - 1;
+        int squareRank = (square.charAt(1) - '0') - 1;
+
+        int rankUp = squareRank + 1;
+        int rankDown = squareRank - 1;
+        int fileLeft = squareFile - 1;
+        int fileRight = squareFile + 1;
+
+        if (Character.isLowerCase(piece) && rankUp < 8) {
+            // These four outer if clauses are there to ensure the program isn't trying to access any squares outside the 8×8 board
+            if (fileRight < 8) {coverageMap[rankUp][fileRight] = replaceChar(coverageMap[rankUp][fileRight], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR); replaceChar(coverageMap[rankUp][fileRight], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
+            if (fileLeft > -1) {coverageMap[rankUp][fileLeft] = replaceChar(coverageMap[rankUp][fileLeft], EMPTY_SQUARE_CHAR, WHITE_COVERAGE_CHAR); replaceChar(coverageMap[rankUp][fileLeft], BLACK_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
+        }
+
+        else if (Character.isUpperCase(piece) && rankDown > -1) {
+            if (fileRight < 8) {coverageMap[rankDown][fileRight] = replaceChar(coverageMap[rankDown][fileRight], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR); replaceChar(coverageMap[rankDown][fileRight], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
+            if (fileLeft > -1) {coverageMap[rankDown][fileLeft] = replaceChar(coverageMap[rankDown][fileLeft], EMPTY_SQUARE_CHAR, BLACK_COVERAGE_CHAR); replaceChar(coverageMap[rankDown][fileLeft], WHITE_COVERAGE_CHAR, DOUBLE_COVERAGE_CHAR);}
+        }
+    }
+
+    // This method can check if a move is possible. So far, en passant is not included. For playerToMove, use "w" and "B" respectively.
+    // If the player is castling, simply enter "O-O" or "O-O-O" (in lowercase if it's white) for the piece parameter and enter "-" for all of the square parameters.
+
     public boolean isMovePossible(@NotNull String piece, @NotNull String startSquare, @NotNull String targetSquare, boolean notSimulated) {
         boolean isMovePossible = false;
 
@@ -286,43 +292,28 @@ public class ChessGameHandler {
             return canCastleHere(piece);
         }
 
-        //The startSquare string is separated and turned into two integers
-        //The integers need to be reduced by 1 since array coordinates start at 0
         int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
         int startSquareRank = (startSquare.charAt(1) - '0') - 1;
 
-
-        //The targetSquare string is separated
         int targetSquareFile = (targetSquare.charAt(0) - 'a' + 1) - 1;
-        // System.out.println("DEBUG: tSF is " + targetSquareFile);
         int targetSquareRank = (targetSquare.charAt(1) - '0') - 1;
-        // System.out.println("DEBUG: tSR is " + targetSquareRank);
-
 
         // In case the move is not simulated, this rules out the move if the piece on the target square is of the same color
         if (notSimulated && isPieceSameColor(piece.charAt(0), position[targetSquareRank][targetSquareFile]) && position[targetSquareRank][targetSquareFile] != EMPTY_SQUARE_CHAR) {
-            // System.err.println("DEBUG: Target square occupied by a same-colored piece.");
             return false;
         }
 
-        //fileDiff and rankDiff is calculated (Math.abs = "absolute value" (Betrag))
-        //These integers contain the difference in files and ranks for a move
         int fileDiff = Math.abs(startSquareFile - targetSquareFile);
         int rankDiff = Math.abs(startSquareRank - targetSquareRank);
 
-        //Checks if it's the right player to move, since capitalization = color
         if (!isPieceSameColor(piece.charAt(0), playerToMove) && notSimulated) {
-            // System.err.println("DEBUG: Wrong player to move");
             return false;
         }
 
-        //Checks if the target square exists to avoid crashes
         if (targetSquareRank < 0 || targetSquareRank > 7 || targetSquareFile < 0 || targetSquareFile > 7) {
-            // System.err.println("DEBUG: One of the squares doesn't exist.");
             return false;
         }
 
-        //Does such a piece even exist on the start square?
         if (piece.charAt(0) != position[startSquareRank][startSquareFile]) {
             return false;
         }
@@ -330,18 +321,12 @@ public class ChessGameHandler {
         //Which piece is it?
         switch (piece.toLowerCase()) {
             //Is the piece a pawn?
-            case "p" -> isMovePossible = checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank, notSimulated);
+            case PAWN -> isMovePossible = checkPawnMove(piece, startSquareFile, startSquareRank, targetSquareFile, targetSquareRank, notSimulated);
 
-            //Is the piece a knight?
-            case "n" -> {
-                //If one of fileDiff and rankDiff is 1 and the other is 2, it's an L-shaped movement
-                if ((fileDiff == 2 && rankDiff == 1) || (fileDiff == 1 && rankDiff == 2)) {
-                    isMovePossible = true;
-                }
-            }
+            case KNIGHT -> isMovePossible = isKnightMovePossible(fileDiff, rankDiff);
 
             //Is the piece a bishop?
-            case "b" -> {
+            case BISHOP -> {
                 //If fileDiff == rankDiff, it's a diagonal movement
                 if (fileDiff == rankDiff) {
                     //Is the path clear of any other pieces?
@@ -352,7 +337,7 @@ public class ChessGameHandler {
             }
 
             //Is the piece a rook?
-            case "r" -> {
+            case ROOK -> {
                 //If exclusively one of the differences is 0, it's a straight movement
                 if (fileDiff == 0 ^ rankDiff == 0) {
                     //Is the path clear of any other pieces?
@@ -363,7 +348,7 @@ public class ChessGameHandler {
             }
 
             //Is the piece a queen?
-            case "q" -> {
+            case QUEEN -> {
                 //The properties of the rook and bishop movement are combined
                 if (fileDiff == rankDiff) {
                     //System.out.println("DEBUG: Queen is moving diagonally.");
@@ -380,7 +365,7 @@ public class ChessGameHandler {
             }
 
             // Is the piece a king?
-            case "k" -> {
+            case KING -> {
                 //If there is at least one difference that equals 1, it's a 1 square king movement
                 if (fileDiff <= 1 && rankDiff <= 1) {
                     //If it's a white king, it can only move to "-" and "[" squares
@@ -530,6 +515,10 @@ public class ChessGameHandler {
         }
 
         return isPawnMovePossible;
+    }
+
+    private boolean isKnightMovePossible(int fileDiff, int rankDiff) {
+        return ((fileDiff == 2 && rankDiff == 1) || (fileDiff == 1 && rankDiff == 2));
     }
 
     //Method for checking if a diagonal is clear for a bishop or queen
@@ -742,7 +731,7 @@ public class ChessGameHandler {
 
         // System.out.println("DEBUG: Player is not castling.");
         try {
-            int enPassantCaptureSquareRank;
+            /*int enPassantCaptureSquareRank;
             if (piece.equals("p")) { // If the piece is a white pawn, check for exceptional moves
                 if((startSquareRank + 2) == targetSquareRank) { // If the pawn is moving 2 squares upward, set the ePTS accordingly
                     enPassantTargetSquareRank = startSquareRank + 1;
@@ -765,7 +754,7 @@ public class ChessGameHandler {
                     position[enPassantCaptureSquareRank][targetSquareFile] = '-';
                     return;
                 }
-            }
+            }*/
 
             int startSquareFile = ((startSquare.charAt(0) - 'a' + 1) - 1);
             int startSquareRank = (startSquare.charAt(1) - '0') - 1;
